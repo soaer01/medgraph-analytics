@@ -6,13 +6,19 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import streamlit as st
 import os
 
-def load_css():
+def load_css()
+from frontend.components.sidebar import render_sidebar
+render_sidebar()
+:
     css_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "styles", "custom.css")
     if os.path.exists(css_path):
         with open(css_path) as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 load_css()
+from frontend.components.sidebar import render_sidebar
+render_sidebar()
+
 
 st.title("🧬 Network Viewer")
 st.markdown("Interactive 3D visualization of the Biomedical Knowledge Graph communities and hub nodes.")

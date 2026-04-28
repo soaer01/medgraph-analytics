@@ -11,13 +11,19 @@ from frontend.components.charts import create_feature_importance_chart, create_g
 from frontend.components.tables import show_discoveries_table
 from frontend.components.network_graph import create_2d_network
 
-def load_css():
+def load_css()
+from frontend.components.sidebar import render_sidebar
+render_sidebar()
+:
     css_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "styles", "custom.css")
     if os.path.exists(css_path):
         with open(css_path) as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 load_css()
+from frontend.components.sidebar import render_sidebar
+render_sidebar()
+
 API_URL = st.secrets.get("API_URL", "http://localhost:8000/api")
 
 st.title("🤖 ML Predictions & Discoveries")
