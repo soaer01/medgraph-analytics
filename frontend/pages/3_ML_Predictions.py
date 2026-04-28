@@ -11,10 +11,7 @@ from frontend.components.charts import create_feature_importance_chart, create_g
 from frontend.components.tables import show_discoveries_table
 from frontend.components.network_graph import create_2d_network
 
-def load_css()
-from frontend.components.sidebar import render_sidebar
-render_sidebar()
-:
+def load_css():
     css_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "styles", "custom.css")
     if os.path.exists(css_path):
         with open(css_path) as f:
