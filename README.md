@@ -4,7 +4,7 @@
 
 > **A full-stack biomedical analytics platform integrating Knowledge Graphs with Machine Learning to predict novel drug-disease repurposing candidates.**
 
-MedGraph-Analytics is a professional, high-performance web application built for academic research and capstone defenses. It allows researchers to explore complex biological networks, analyze graph topology, and utilize a fine-tuned Random Forest classifier to discover hidden therapeutic relationships between compounds and diseases.
+MedGraph-Analytics is a professional, high-performance web application built for academic research and advanced biomedical analytics. It allows researchers to explore complex biological networks, analyze graph topology, and utilize a fine-tuned Random Forest classifier to discover hidden therapeutic relationships between compounds and diseases.
 
 ---
 
@@ -95,4 +95,4 @@ MedGraph-Analytics is architected to be deployed as two decoupled microservices:
 ---
 
 ## 🎓 Academic Context
-This project was developed as a Capstone Defense project for a BS Data Science curriculum (Semester 6 - Artificial Intelligence). It demonstrates the practical application of Graph Data Science (GDS) and applied Machine Learning in the domain of computational pharmacology.
+This project was developed as a comprehensive analytical tool for a BS Data Science curriculum (Semester 6 - Artificial Intelligence). It demonstrates the practical application of Graph Data Science (GDS) and applied Machine Learning in the domain of computational pharmacology.

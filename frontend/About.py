@@ -37,7 +37,7 @@ with st.sidebar:
     st.markdown(f"**Data Service** {data_ok}")
     st.markdown(f"**ML Model** {model_ok}")
     st.markdown("---")
-    st.caption("Capstone Defense · 2026")
+    st.caption("BS Data Science · 2026")
 
 # ── Hero Section ──
 st.title("MedGraph-Analytics")
