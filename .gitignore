@@ -1,0 +1,19 @@
+# Virtual environments
+myenv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Gemini artifacts (not needed for deployment)
+.gemini/

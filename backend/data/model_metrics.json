@@ -1,0 +1,115 @@
+{
+    "metrics": {
+        "Model": [
+            "Baseline",
+            "Baseline",
+            "Baseline",
+            "Baseline",
+            "Graph (Default)",
+            "Graph (Default)",
+            "Graph (Default)",
+            "Graph (Default)",
+            "Graph (Fine-Tuned)",
+            "Graph (Fine-Tuned)",
+            "Graph (Fine-Tuned)",
+            "Graph (Fine-Tuned)"
+        ],
+        "Metric": [
+            "Accuracy",
+            "Precision",
+            "Recall",
+            "ROC-AUC",
+            "Accuracy",
+            "Precision",
+            "Recall",
+            "ROC-AUC",
+            "Accuracy",
+            "Precision",
+            "Recall",
+            "ROC-AUC"
+        ],
+        "Score": [
+            0.8112582781456954,
+            0.7884615384615384,
+            0.8367346938775511,
+            0.8993416721527321,
+            0.8311258278145696,
+            0.7823529411764706,
+            0.9047619047619048,
+            0.9339697169190256,
+            0.8311258278145696,
+            0.7758620689655172,
+            0.9183673469387755,
+            0.9289005924950625
+        ]
+    },
+    "feature_importance": [
+        {
+            "feature": "compound_out_degree",
+            "importance_score": 0.17891633232666912
+        },
+        {
+            "feature": "disease_betweenness",
+            "importance_score": 0.16997879571928579
+        },
+        {
+            "feature": "disease_in_degree",
+            "importance_score": 0.12571814191817307
+        },
+        {
+            "feature": "compound_clustering",
+            "importance_score": 0.11235698933499523
+        },
+        {
+            "feature": "disease_pagerank",
+            "importance_score": 0.11136582994614849
+        },
+        {
+            "feature": "compound_betweenness",
+            "importance_score": 0.07273411843748508
+        },
+        {
+            "feature": "disease_out_degree",
+            "importance_score": 0.06601115617329137
+        },
+        {
+            "feature": "disease_clustering",
+            "importance_score": 0.06307945967709402
+        },
+        {
+            "feature": "compound_pagerank",
+            "importance_score": 0.05634642935688518
+        },
+        {
+            "feature": "compound_in_degree",
+            "importance_score": 0.03884332240333331
+        },
+        {
+            "feature": "same_louvain_community",
+            "importance_score": 0.0046494247066392975
+        },
+        {
+            "feature": "compound_eigenvector",
+            "importance_score": 0.0
+        },
+        {
+            "feature": "disease_eigenvector",
+            "importance_score": 0.0
+        }
+    ],
+    "features": [
+        "compound_out_degree",
+        "compound_in_degree",
+        "disease_out_degree",
+        "disease_in_degree",
+        "compound_pagerank",
+        "disease_pagerank",
+        "compound_betweenness",
+        "disease_betweenness",
+        "compound_eigenvector",
+        "disease_eigenvector",
+        "compound_clustering",
+        "disease_clustering",
+        "same_louvain_community"
+    ]
+}
