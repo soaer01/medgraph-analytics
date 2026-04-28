@@ -312,11 +312,17 @@ section[data-testid="stSidebar"] > div {
     padding-top: 0rem !important;
 }
 [data-testid="stSidebarUserContent"] {
-    padding-top: 0rem !important;
+    padding-top: 3rem !important; /* Space above title */
 }
 [data-testid="stSidebarHeader"] {
     display: none !important; /* Hide the empty header completely */
 }
+
+/* Center the title vertically in the top space by adding equal space below the first divider */
+[data-testid="stSidebarUserContent"] hr:first-of-type {
+    margin-bottom: 3rem !important;
+}
+
 /* Tighten the gap between Title and Caption */
 [data-testid="stSidebarUserContent"] h2 {
     margin-top: 0rem !important;
@@ -330,4 +336,3 @@ section[data-testid="stSidebar"] > div {
     margin-top: 0rem !important;
     padding-top: 0rem !important;
 }
-
