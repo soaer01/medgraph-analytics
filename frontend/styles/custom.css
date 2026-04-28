@@ -270,3 +270,9 @@ hr {
 ::-webkit-scrollbar-track { background: var(--bg-primary); }
 ::-webkit-scrollbar-thumb { background: rgba(160,174,192,0.2); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(99,179,237,0.4); }
+
+/* Hide default Streamlit sidebar nav in favor of custom page links */
+[data-testid="stSidebarNav"] {
+    display: none !important;
+}
+
