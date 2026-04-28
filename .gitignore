@@ -17,3 +17,6 @@ Thumbs.db
 
 # Gemini artifacts (not needed for deployment)
 .gemini/
+
+# Streamlit secrets
+.streamlit/secrets.toml
