@@ -6,24 +6,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap');
 
 :root {
-    --bg-primary:    #0f1117;
-    --bg-secondary:  #1a1c24;
-    --bg-card:       #1e2029;
-    --border:        rgba(255,255,255,0.08);
-    --border-hover:  rgba(99,179,237,0.35);
-    --text-primary:  #f0f4f8;
-    --text-secondary:#a0aec0;
-    --text-muted:    #718096;
-    --accent:        #63b3ed;
-    --accent-green:  #68d391;
-    --danger:        #fc8181;
-    --shadow-sm:     0 1px 3px rgba(0,0,0,0.35);
-    --shadow-md:     0 4px 16px rgba(0,0,0,0.3);
-    --radius:        10px;
+    --bg-primary: #0f1117;
+    --bg-secondary: #1a1c24;
+    --bg-card: #1e2029;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(99, 179, 237, 0.35);
+    --text-primary: #f0f4f8;
+    --text-secondary: #a0aec0;
+    --text-muted: #718096;
+    --accent: #63b3ed;
+    --accent-green: #68d391;
+    --danger: #fc8181;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+    --radius: 10px;
 }
 
 /* ── Base ── */
-html, body, .stApp {
+html,
+body,
+.stApp {
     background-color: var(--bg-primary) !important;
     color: var(--text-primary) !important;
     font-family: 'Roboto', sans-serif !important;
@@ -48,6 +50,7 @@ html, body, .stApp {
     background-color: var(--bg-secondary) !important;
     border-right: 1px solid var(--border) !important;
 }
+
 /* Sidebar nav links — specific targeting only */
 [data-testid="stSidebarNav"] a {
     color: var(--text-primary) !important;
@@ -59,18 +62,22 @@ html, body, .stApp {
     display: block;
     transition: background 0.15s ease;
 }
+
 [data-testid="stSidebarNav"] a:hover {
-    background-color: rgba(99,179,237,0.08) !important;
+    background-color: rgba(99, 179, 237, 0.08) !important;
 }
+
 [data-testid="stSidebarNav"] a[aria-current="page"] {
-    background-color: rgba(99,179,237,0.12) !important;
+    background-color: rgba(99, 179, 237, 0.12) !important;
     border-left: 3px solid var(--accent) !important;
     color: var(--accent) !important;
 }
+
 /* Sidebar nav item text spans */
 [data-testid="stSidebarNav"] span {
     color: inherit !important;
 }
+
 /* Sidebar general text (caption, markdown) — only direct text nodes */
 [data-testid="stSidebar"] .stMarkdown p,
 [data-testid="stSidebar"] .stCaption {
@@ -91,6 +98,7 @@ h1 {
     border-bottom: 2px solid var(--accent) !important;
     display: inline-block !important;
 }
+
 /* h2 */
 h2 {
     font-family: 'Inter', sans-serif !important;
@@ -101,6 +109,7 @@ h2 {
     margin-top: 2rem !important;
     margin-bottom: 0.75rem !important;
 }
+
 /* h3 — section headers */
 h3 {
     font-family: 'Inter', sans-serif !important;
@@ -111,8 +120,10 @@ h3 {
     margin-top: 1.8rem !important;
     margin-bottom: 0.6rem !important;
 }
+
 /* h4/h5 — sub-section */
-h4, h5 {
+h4,
+h5 {
     font-family: 'Inter', sans-serif !important;
     font-weight: 600 !important;
     color: var(--text-secondary) !important;
@@ -120,17 +131,22 @@ h4, h5 {
     margin-top: 1.2rem !important;
     margin-bottom: 0.4rem !important;
 }
+
 /* Body markdown paragraphs only — NOT internal widget divs */
-.stMarkdown p, .stMarkdown li {
+.stMarkdown p,
+.stMarkdown li {
     color: var(--text-primary) !important;
     font-family: 'Roboto', sans-serif !important;
     line-height: 1.7 !important;
 }
+
 .stMarkdown strong {
     color: var(--text-primary) !important;
     font-weight: 600 !important;
 }
-.stCaption, .stCaption p {
+
+.stCaption,
+.stCaption p {
     color: var(--text-muted) !important;
     font-size: 0.82rem !important;
 }
@@ -144,16 +160,19 @@ h4, h5 {
     box-shadow: var(--shadow-sm) !important;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
+
 [data-testid="stMetric"]:hover {
     border-color: var(--border-hover) !important;
     box-shadow: var(--shadow-md) !important;
 }
+
 [data-testid="stMetricValue"] {
     font-family: 'Inter', sans-serif !important;
     font-size: 1.8rem !important;
     font-weight: 700 !important;
     color: var(--accent) !important;
 }
+
 [data-testid="stMetricLabel"] {
     color: var(--text-secondary) !important;
     font-size: 0.8rem !important;
@@ -163,7 +182,7 @@ h4, h5 {
 }
 
 /* ── Buttons ── */
-.stButton > button {
+.stButton>button {
     font-family: 'Inter', sans-serif !important;
     font-weight: 600 !important;
     font-size: 0.88rem !important;
@@ -172,29 +191,33 @@ h4, h5 {
     transition: all 0.18s ease !important;
     box-shadow: var(--shadow-sm) !important;
 }
+
 /* Primary button (type="primary") */
-.stButton > button[kind="primary"] {
+.stButton>button[kind="primary"] {
     background-color: var(--accent) !important;
     color: var(--bg-primary) !important;
     border: none !important;
 }
-.stButton > button[kind="primary"]:hover {
+
+.stButton>button[kind="primary"]:hover {
     background-color: #90cdf4 !important;
     transform: translateY(-1px) !important;
     box-shadow: var(--shadow-md) !important;
 }
+
 /* Secondary button */
-.stButton > button[kind="secondary"] {
+.stButton>button[kind="secondary"] {
     background-color: transparent !important;
     color: var(--accent) !important;
     border: 1px solid var(--accent) !important;
 }
-.stButton > button[kind="secondary"]:hover {
-    background-color: rgba(99,179,237,0.1) !important;
+
+.stButton>button[kind="secondary"]:hover {
+    background-color: rgba(99, 179, 237, 0.1) !important;
 }
 
 /* ── Inputs & Selectboxes ── */
-.stSelectbox [data-baseweb="select"] > div:first-child,
+.stSelectbox [data-baseweb="select"]>div:first-child,
 .stTextInput [data-baseweb="input"] {
     background-color: var(--bg-card) !important;
     border-color: var(--border) !important;
@@ -202,10 +225,11 @@ h4, h5 {
     color: var(--text-primary) !important;
     transition: border-color 0.18s;
 }
-.stSelectbox [data-baseweb="select"] > div:first-child:focus-within,
+
+.stSelectbox [data-baseweb="select"]>div:first-child:focus-within,
 .stTextInput [data-baseweb="input"]:focus-within {
     border-color: var(--accent) !important;
-    box-shadow: 0 0 0 2px rgba(99,179,237,0.18) !important;
+    box-shadow: 0 0 0 2px rgba(99, 179, 237, 0.18) !important;
 }
 
 /* ── Tabs ── */
@@ -215,6 +239,7 @@ h4, h5 {
     font-weight: 500 !important;
     border-radius: 6px 6px 0 0 !important;
 }
+
 [data-testid="stTabs"] button[aria-selected="true"] {
     color: var(--accent) !important;
     border-bottom: 2px solid var(--accent) !important;
@@ -234,6 +259,7 @@ h4, h5 {
     border-radius: var(--radius) !important;
     margin-bottom: 0.5rem !important;
 }
+
 [data-testid="stExpander"] summary {
     color: var(--text-primary) !important;
     font-family: 'Inter', sans-serif !important;
@@ -241,6 +267,7 @@ h4, h5 {
     font-size: 0.95rem !important;
     padding: 0.8rem 1rem !important;
 }
+
 /* Expander arrow SVG */
 [data-testid="stExpander"] summary svg {
     fill: var(--text-secondary) !important;
@@ -261,15 +288,29 @@ hr {
 [data-testid="stSlider"] [data-baseweb="slider"] [role="slider"] {
     background-color: var(--accent) !important;
 }
+
 [data-testid="stSlider"] [data-baseweb="slider"] div[data-testid="stSlider-thumb"] {
     background-color: var(--accent) !important;
 }
 
 /* ── Scrollbar ── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-primary); }
-::-webkit-scrollbar-thumb { background: rgba(160,174,192,0.2); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(99,179,237,0.4); }
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(160, 174, 192, 0.2);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 179, 237, 0.4);
+}
 
 /* Hide default Streamlit sidebar nav in favor of custom page links */
 [data-testid="stSidebarNav"] {
@@ -283,6 +324,7 @@ hr {
     padding-bottom: 0rem !important;
     height: auto !important;
 }
+
 [data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
     padding-top: 0rem !important;
 }
@@ -292,14 +334,17 @@ hr {
 [data-testid="stSidebarUserContent"] {
     padding-top: 0rem !important;
 }
-[data-testid="stSidebarUserContent"] > div:first-child {
+
+[data-testid="stSidebarUserContent"]>div:first-child {
     padding-top: 0rem !important;
 }
+
 [data-testid="stSidebarUserContent"] h2 {
     margin-top: 0rem !important;
     padding-top: 0rem !important;
 }
-section[data-testid="stSidebar"] > div {
+
+section[data-testid="stSidebar"]>div {
     padding-top: 0rem !important;
 }
 
@@ -308,19 +353,24 @@ section[data-testid="stSidebar"] > div {
 [data-testid="stSidebar"] {
     padding-top: 0rem !important;
 }
-[data-testid="stSidebar"] > div {
+
+[data-testid="stSidebar"]>div {
     padding-top: 0rem !important;
 }
+
 [data-testid="stSidebarUserContent"] {
-    padding-top: 3rem !important; /* Space above title */
+    padding-top: 3rem !important;
+    /* Space above title */
 }
+
 [data-testid="stSidebarHeader"] {
-    display: none !important; /* Hide the empty header completely */
+    display: none !important;
+    /* Hide the empty header completely */
 }
 
 /* Center the title vertically in the top space by adding equal space below the first divider */
 [data-testid="stSidebarUserContent"] hr:first-of-type {
-    margin-bottom: 3rem !important;
+    margin-bottom: 1rem !important;
 }
 
 /* Tighten the gap between Title and Caption */
@@ -331,6 +381,7 @@ section[data-testid="stSidebar"] > div {
     padding-bottom: 0.2rem !important;
     line-height: 1.2 !important;
 }
+
 [data-testid="stSidebarUserContent"] [data-testid="stCaptionContainer"],
 [data-testid="stSidebarUserContent"] .stMarkdown p {
     margin-top: 0rem !important;
