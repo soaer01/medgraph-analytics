@@ -9,3 +9,4 @@ streamlit
 streamlit-aggrid
 requests
 pydantic
+Pillow

@@ -158,7 +158,13 @@ def create_2d_network(nodes: list, edges: list, title: str = "Node Connections")
 
 
 def create_3d_network(nodes: list, edges: list, title: str = "3D Node Graph") -> go.Figure:
-    """Render an interactive 3D ego-graph with neon glowing nodes."""
+    """Render an interactive 3D ego-graph with neon glowing nodes and auto-rotation.
+    
+    The graph auto-rotates via Plotly animation frames (orbital camera).
+    User can click/drag to stop and take manual control.
+    """
+    import math
+
     if not nodes:
         fig = go.Figure()
         fig.update_layout(title="No data to display")
@@ -211,11 +217,24 @@ def create_3d_network(nodes: list, edges: list, title: str = "3D Node Graph") ->
         ))
 
     fig = go.Figure(data=[edge_trace] + node_traces)
+
+    # ── Auto-rotation: 72 frames for smooth 360° orbital camera ──
+    frames = []
+    for i in range(72):
+        angle = i * 5 * (math.pi / 180)
+        eye = dict(x=2.2 * math.cos(angle), y=2.2 * math.sin(angle), z=0.8)
+        frames.append(go.Frame(
+            layout=dict(scene_camera=dict(eye=eye)),
+            name=str(i)
+        ))
+    fig.frames = frames
+
     fig.update_layout(
         title=dict(text=title, font=dict(size=16, color='#e8ecf4', family='Inter')),
         paper_bgcolor='rgba(0,0,0,0)',
         scene=dict(
             bgcolor='rgba(10,12,20,1)',
+            camera=dict(eye=dict(x=2.2, y=0, z=0.8)),
             xaxis=dict(showgrid=False, zeroline=False, showticklabels=False,
                        backgroundcolor='rgba(0,0,0,0)'),
             yaxis=dict(showgrid=False, zeroline=False, showticklabels=False,
@@ -231,5 +250,20 @@ def create_3d_network(nodes: list, edges: list, title: str = "3D Node Graph") ->
         ),
         margin=dict(l=0, r=0, t=50, b=0),
         height=520,
+        # Auto-play rotation animation
+        updatemenus=[dict(
+            type="buttons", showactive=False, visible=False,
+            x=0, y=0, xanchor="left", yanchor="bottom",
+            buttons=[dict(
+                label="",
+                method="animate",
+                args=[None, {
+                    "frame": {"duration": 100, "redraw": True},
+                    "fromcurrent": True,
+                    "transition": {"duration": 0},
+                    "mode": "immediate"
+                }]
+            )]
+        )]
     )
     return fig

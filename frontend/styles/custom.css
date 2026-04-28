@@ -92,6 +92,15 @@
     50%      { box-shadow: 0 0 10px rgba(0,240,255,0.3), 0 0 30px rgba(0,240,255,0.1); }
 }
 
+/* Ken Burns — cinematic background pan/zoom */
+@keyframes kenBurns {
+    0%   { transform: scale(1.0) translate(0, 0); }
+    25%  { transform: scale(1.08) translate(-1%, -0.5%); }
+    50%  { transform: scale(1.05) translate(0.5%, 1%); }
+    75%  { transform: scale(1.1) translate(-0.5%, -1%); }
+    100% { transform: scale(1.0) translate(0, 0); }
+}
+
 /* ================================================================
    BASE
    ================================================================ */
@@ -101,6 +110,22 @@ html, body, .stApp {
     color: var(--text-primary) !important;
     font-family: 'Roboto', sans-serif !important;
     -webkit-font-smoothing: antialiased;
+}
+
+/* Animated Ken Burns background image — layer behind particles */
+.stApp::before {
+    content: '';
+    position: fixed;
+    top: -5%; left: -5%;
+    width: 110%; height: 110%;
+    background-image: url('../assets/bg_medgraph.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: kenBurns 30s ease-in-out infinite;
+    opacity: 0.12;
+    z-index: -2;
+    pointer-events: none;
 }
 
 /* ── Main content area with entrance animation ── */
@@ -637,4 +662,97 @@ hr {
     z-index: -1;
     pointer-events: none;
     opacity: 0.12;
+}
+
+/* ================================================================
+   NEON BORDERS — ALL VISUALIZATIONS
+   ================================================================ */
+
+/* Plotly chart containers */
+[data-testid="stPlotlyChart"] {
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--radius) !important;
+    box-shadow: var(--glow-cyan) !important;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+[data-testid="stPlotlyChart"]:hover {
+    border-color: var(--glass-border-hover) !important;
+    box-shadow: var(--glow-cyan-strong) !important;
+}
+
+/* Image containers */
+[data-testid="stImage"] {
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--radius) !important;
+    box-shadow: var(--glow-cyan) !important;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+[data-testid="stImage"]:hover {
+    border-color: var(--glass-border-hover) !important;
+    box-shadow: var(--glow-cyan-strong) !important;
+}
+
+/* JSON viewers */
+[data-testid="stJson"] {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--radius) !important;
+    box-shadow: var(--glow-cyan) !important;
+    backdrop-filter: blur(8px) !important;
+}
+
+/* Code blocks */
+[data-testid="stCodeBlock"],
+.stCodeBlock {
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--radius) !important;
+    box-shadow: 0 0 5px rgba(0,240,255,0.08) !important;
+}
+
+/* Standalone text markdown blocks within columns — subtle glass card */
+.stMarkdown {
+    transition: all 0.2s ease;
+}
+
+/* Info alerts — cyan left accent */
+[data-testid="stAlert"][data-baseweb="notification"] {
+    border-left: 3px solid var(--neon-cyan) !important;
+    background: var(--bg-card) !important;
+    backdrop-filter: blur(8px) !important;
+}
+
+/* Warning alerts — yellow left accent */
+.stAlert .st-emotion-cache-warning {
+    border-left-color: var(--neon-yellow) !important;
+}
+
+/* Error alerts — pink left accent */
+.stAlert .st-emotion-cache-error {
+    border-left-color: var(--neon-pink) !important;
+}
+
+/* iframes (embedded HTML like 3D network) */
+iframe {
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--radius) !important;
+    box-shadow: var(--glow-cyan) !important;
+}
+
+/* Sidebar link icons — neon glow on custom images */
+.sidebar-icon-img {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    filter: drop-shadow(0 0 3px rgba(0,240,255,0.4));
+    transition: filter 0.2s ease;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.sidebar-neon-link:hover .sidebar-icon-img {
+    filter: drop-shadow(0 0 6px rgba(0,240,255,0.7));
 }

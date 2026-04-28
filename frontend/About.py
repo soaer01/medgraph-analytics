@@ -7,11 +7,15 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import streamlit as st
 import requests
 import os
+from PIL import Image
 
 # ── Page Config ──
+_favicon_path = os.path.join(os.path.dirname(__file__), "assets", "favicon.png")
+_favicon = Image.open(_favicon_path) if os.path.exists(_favicon_path) else "🧬"
+
 st.set_page_config(
     page_title="About — MedGraph-Analytics",
-    page_icon="🧬",
+    page_icon=_favicon,
     layout="wide",
     initial_sidebar_state="expanded",
 )
