@@ -371,6 +371,7 @@ section[data-testid="stSidebar"]>div {
 /* Center the title vertically in the top space by adding equal space below the first divider */
 [data-testid="stSidebarUserContent"] hr:first-of-type {
     margin-bottom: 1rem !important;
+    padding-top: 1rem !important;
 }
 
 /* Tighten the gap between Title and Caption */
