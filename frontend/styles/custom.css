@@ -364,8 +364,10 @@ section[data-testid="stSidebar"]>div {
 }
 
 [data-testid="stSidebarHeader"] {
-    display: none !important;
-    /* Hide the empty header completely */
+    padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
 }
 
 /* Center the title vertically in the top space by adding equal space below the first divider */
