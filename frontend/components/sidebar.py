@@ -11,13 +11,13 @@ def render_sidebar():
         st.markdown("---")
 
         # 2. Page Navigation Menu
-        st.page_link("frontend/About.py", label="About", icon=":material/info:")
-        st.page_link("frontend/pages/1_Dashboard.py", label="Dashboard", icon=":material/dashboard:")
-        st.page_link("frontend/pages/2_Graph_Analytics.py", label="Graph Analytics", icon=":material/analytics:")
-        st.page_link("frontend/pages/3_ML_Predictions.py", label="ML Predictions", icon=":material/model_training:")
-        st.page_link("frontend/pages/4_Drug_Explorer.py", label="Drug Explorer", icon=":material/travel_explore:")
-        st.page_link("frontend/pages/5_Network_Viewer.py", label="Network Viewer", icon=":material/hub:")
-        st.page_link("frontend/pages/6_Terminology.py", label="Terminology", icon=":material/menu_book:")
+        st.page_link("About.py", label="About", icon=":material/info:")
+        st.page_link("pages/1_Dashboard.py", label="Dashboard", icon=":material/dashboard:")
+        st.page_link("pages/2_Graph_Analytics.py", label="Graph Analytics", icon=":material/analytics:")
+        st.page_link("pages/3_ML_Predictions.py", label="ML Predictions", icon=":material/model_training:")
+        st.page_link("pages/4_Drug_Explorer.py", label="Drug Explorer", icon=":material/travel_explore:")
+        st.page_link("pages/5_Network_Viewer.py", label="Network Viewer", icon=":material/hub:")
+        st.page_link("pages/6_Terminology.py", label="Terminology", icon=":material/menu_book:")
         
         st.markdown("---")
 
