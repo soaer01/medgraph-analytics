@@ -1,18 +1,24 @@
 import plotly.graph_objects as go
 import numpy as np
 
-# Professional palette matching the app theme
+# Neon palette matching the futuristic theme
 NODE_COLORS = {
-    'Compound':  '#63b3ed',   # blue
-    'Disease':   '#fc8181',   # red/coral
-    'Gene':      '#68d391',   # green
-    'Anatomy':   '#f6e05e',   # gold
-    'Pathway':   '#b794f4',   # purple
-    'Biological Process': '#4fd1c5',
-    'Cellular Component': '#f687b3',
-    'Molecular Function': '#fbd38d',
-    'default':   '#a0aec0',   # grey for unknown
+    'Compound':  '#00d4ff',   # neon cyan
+    'Disease':   '#ff4081',   # neon pink-red
+    'Gene':      '#39ff14',   # neon green
+    'Anatomy':   '#ffea00',   # neon yellow
+    'Pathway':   '#d500f9',   # neon purple
+    'Biological Process': '#00e5ff',
+    'Cellular Component': '#ff80ab',
+    'Molecular Function': '#ffab40',
+    'default':   '#b0bec5',
 }
+
+# Neon glow border color for all nodes
+GLOW_COLOR = 'rgba(0,240,255,0.8)'
+GLOW_COLOR_3D = 'rgba(0,240,255,0.7)'
+EDGE_COLOR = 'rgba(0,240,255,0.18)'
+EDGE_COLOR_3D = 'rgba(0,240,255,0.15)'
 
 def _get_node_color(kind: str) -> str:
     return NODE_COLORS.get(kind, NODE_COLORS['default'])
@@ -57,7 +63,7 @@ def _spring_layout_3d(nodes: list, edges: list) -> dict:
 
 
 def create_2d_network(nodes: list, edges: list, title: str = "Node Connections") -> go.Figure:
-    """Render an interactive 2D ego-graph using Plotly Scatter traces."""
+    """Render an interactive 2D ego-graph with neon glowing nodes."""
     if not nodes:
         fig = go.Figure()
         fig.update_layout(title="No data to display")
@@ -77,7 +83,7 @@ def create_2d_network(nodes: list, edges: list, title: str = "Node Connections")
 
     edge_trace = go.Scatter(
         x=edge_x, y=edge_y, mode='lines',
-        line=dict(width=1.2, color='rgba(160,174,192,0.35)'),
+        line=dict(width=1.2, color=EDGE_COLOR),
         hoverinfo='none', showlegend=False
     )
 
@@ -88,6 +94,8 @@ def create_2d_network(nodes: list, edges: list, title: str = "Node Connections")
         kind_groups.setdefault(k, []).append(node)
 
     node_traces = []
+    glow_traces = []  # Glow halos behind nodes
+
     for kind, group in kind_groups.items():
         xs = [pos[n['id']][0] for n in group if n['id'] in pos]
         ys = [pos[n['id']][1] for n in group if n['id'] in pos]
@@ -96,32 +104,51 @@ def create_2d_network(nodes: list, edges: list, title: str = "Node Connections")
             f"<b>{n.get('name', n['id'])}</b><br>Type: {kind}<br>ID: {n['id']}"
             for n in group if n['id'] in pos
         ]
-        sizes = [18 if i == 0 else 10 for i, n in enumerate(group)]
+        sizes = [20 if i == 0 else 11 for i, n in enumerate(group)]
+
+        # Glow halo trace (behind)
+        glow_sizes = [s + 10 for s in sizes]
+        glow_traces.append(go.Scatter(
+            x=xs, y=ys, mode='markers',
+            marker=dict(
+                size=glow_sizes,
+                color=_get_node_color(kind),
+                opacity=0.12,
+                line=dict(width=0)
+            ),
+            hoverinfo='none', showlegend=False
+        ))
+
+        # Main node trace
         node_traces.append(go.Scatter(
             x=xs, y=ys, mode='markers+text',
-            marker=dict(size=sizes, color=_get_node_color(kind),
-                        line=dict(width=1.5, color='rgba(255,255,255,0.3)')),
+            marker=dict(
+                size=sizes,
+                color=_get_node_color(kind),
+                line=dict(width=2.5, color=GLOW_COLOR),
+                opacity=0.95,
+            ),
             text=texts,
             textposition='top center',
-            textfont=dict(size=9, color='#f0f4f8'),
+            textfont=dict(size=9, color='#e8ecf4'),
             hovertext=hover, hoverinfo='text',
             name=kind, legendgroup=kind
         ))
 
-    fig = go.Figure(data=[edge_trace] + node_traces)
+    fig = go.Figure(data=[edge_trace] + glow_traces + node_traces)
     fig.update_layout(
-        title=dict(text=title, font=dict(size=16, color='#f0f4f8', family='Inter')),
+        title=dict(text=title, font=dict(size=16, color='#e8ecf4', family='Inter')),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='#f0f4f8', family='Roboto, sans-serif'),
+        font=dict(color='#e8ecf4', family='Roboto, sans-serif'),
         xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
         yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
         legend=dict(
             orientation='v', x=1.02, y=1,
-            bgcolor='rgba(30,32,41,0.8)',
-            bordercolor='rgba(255,255,255,0.1)',
+            bgcolor='rgba(15,18,28,0.85)',
+            bordercolor='rgba(0,240,255,0.15)',
             borderwidth=1,
-            font=dict(size=11, color='#a0aec0')
+            font=dict(size=11, color='#8896ab')
         ),
         hovermode='closest',
         margin=dict(l=10, r=120, t=50, b=10),
@@ -131,7 +158,7 @@ def create_2d_network(nodes: list, edges: list, title: str = "Node Connections")
 
 
 def create_3d_network(nodes: list, edges: list, title: str = "3D Node Graph") -> go.Figure:
-    """Render an interactive 3D ego-graph using Plotly Scatter3d."""
+    """Render an interactive 3D ego-graph with neon glowing nodes."""
     if not nodes:
         fig = go.Figure()
         fig.update_layout(title="No data to display")
@@ -151,7 +178,7 @@ def create_3d_network(nodes: list, edges: list, title: str = "3D Node Graph") ->
 
     edge_trace = go.Scatter3d(
         x=ex, y=ey, z=ez, mode='lines',
-        line=dict(width=1.5, color='rgba(160,174,192,0.3)'),
+        line=dict(width=2, color=EDGE_COLOR_3D),
         hoverinfo='none', showlegend=False
     )
 
@@ -170,22 +197,25 @@ def create_3d_network(nodes: list, edges: list, title: str = "3D Node Graph") ->
             f"<b>{n.get('name', n['id'])}</b><br>Type: {kind}<br>ID: {n['id']}"
             for n in group if n['id'] in pos
         ]
-        sizes = [14 if i == 0 else 7 for i, n in enumerate(group)]
+        sizes = [16 if i == 0 else 8 for i, n in enumerate(group)]
         node_traces.append(go.Scatter3d(
             x=xs, y=ys, z=zs, mode='markers',
-            marker=dict(size=sizes, color=_get_node_color(kind),
-                        line=dict(width=1, color='rgba(255,255,255,0.2)'),
-                        opacity=0.9),
+            marker=dict(
+                size=sizes,
+                color=_get_node_color(kind),
+                line=dict(width=2.5, color=GLOW_COLOR_3D),
+                opacity=0.92
+            ),
             hovertext=hover, hoverinfo='text',
             name=kind, legendgroup=kind
         ))
 
     fig = go.Figure(data=[edge_trace] + node_traces)
     fig.update_layout(
-        title=dict(text=title, font=dict(size=16, color='#f0f4f8', family='Inter')),
+        title=dict(text=title, font=dict(size=16, color='#e8ecf4', family='Inter')),
         paper_bgcolor='rgba(0,0,0,0)',
         scene=dict(
-            bgcolor='rgba(15,17,23,1)',
+            bgcolor='rgba(10,12,20,1)',
             xaxis=dict(showgrid=False, zeroline=False, showticklabels=False,
                        backgroundcolor='rgba(0,0,0,0)'),
             yaxis=dict(showgrid=False, zeroline=False, showticklabels=False,
@@ -194,9 +224,9 @@ def create_3d_network(nodes: list, edges: list, title: str = "3D Node Graph") ->
                        backgroundcolor='rgba(0,0,0,0)'),
         ),
         legend=dict(
-            font=dict(size=11, color='#a0aec0'),
-            bgcolor='rgba(30,32,41,0.8)',
-            bordercolor='rgba(255,255,255,0.1)',
+            font=dict(size=11, color='#8896ab'),
+            bgcolor='rgba(15,18,28,0.85)',
+            bordercolor='rgba(0,240,255,0.15)',
             borderwidth=1
         ),
         margin=dict(l=0, r=0, t=50, b=0),

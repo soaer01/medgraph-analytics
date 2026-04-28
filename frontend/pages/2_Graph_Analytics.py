@@ -18,12 +18,19 @@ def load_css():
 
 load_css()
 from frontend.components.sidebar import render_sidebar
+from frontend.components.page_header import render_page_header
+from frontend.components.particles import render_particles
+
 render_sidebar()
+render_particles()
 
 API_URL = st.secrets.get("API_URL", "http://localhost:8000/api")
 
-st.title("🔬 Graph Analytics")
-st.markdown("Explore the topological structure of the Biomedical Knowledge Graph.")
+render_page_header(
+    "Graph Analytics",
+    "graph_analytics",
+    "Explore the topological structure of the Biomedical Knowledge Graph."
+)
 
 st.markdown("---")
 

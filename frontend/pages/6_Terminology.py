@@ -14,11 +14,15 @@ def load_css():
 
 load_css()
 from frontend.components.sidebar import render_sidebar
+from frontend.components.page_header import render_page_header
+from frontend.components.particles import render_particles
+
 render_sidebar()
+render_particles()
 
-
-st.title("📚 Terminology Reference")
-st.markdown(
+render_page_header(
+    "Terminology Reference",
+    "terminology",
     "Complete glossary covering every graph metric, ML concept, chart legend, "
     "edge type, node type, and axis label used across this platform."
 )
@@ -77,25 +81,25 @@ TERMS = {
 
     # ── Node Types (Colors in Network Graphs) ────────────────
     "Node Types — Network Graph Legend": {
-        "Compound 🔵": (
+        "Compound (cyan)": (
             "A small molecule drug or chemical compound (e.g., Metformin, Aspirin). "
-            "Displayed in **blue** in the 2D/3D network graphs."
+            "Displayed in **neon cyan** in the 2D/3D network graphs."
         ),
-        "Disease 🔴": (
+        "Disease (pink-red)": (
             "A diagnosed medical condition or disorder (e.g., Type 2 Diabetes, Breast Cancer). "
-            "Displayed in **coral/red** in the network graphs."
+            "Displayed in **neon pink-red** in the network graphs."
         ),
-        "Gene 🟢": (
+        "Gene (green)": (
             "A gene or gene product (protein) in the human genome (e.g., BRCA1, TP53). "
-            "Displayed in **green** in the network graphs."
+            "Displayed in **neon green** in the network graphs."
         ),
-        "Anatomy 🟡": (
+        "Anatomy (yellow)": (
             "An anatomical location or organ system (e.g., Liver, Lung, Brain). "
-            "Displayed in **gold** in the network graphs."
+            "Displayed in **neon yellow** in the network graphs."
         ),
-        "Pathway 🟣": (
+        "Pathway (purple)": (
             "A biological signaling or metabolic pathway (e.g., MAPK signaling, Apoptosis). "
-            "Displayed in **purple** in the network graphs."
+            "Displayed in **neon purple** in the network graphs."
         ),
         "Biological Process (teal)": (
             "A GO (Gene Ontology) Biological Process term, describing a multi-step biological "
@@ -243,9 +247,9 @@ TERMS = {
         "Y-Axis range (0.7 – 1.0)": (
             "Cropped range to highlight differences between models. All models score above 70%."
         ),
-        "Blue bars — Baseline": "Random Forest with degree features only.",
+        "Cyan bars — Baseline": "Random Forest with degree features only.",
         "Green bars — Graph (Default)": "Random Forest with all graph features, default settings.",
-        "Coral bars — Graph (Fine-Tuned)": "Best model: graph features + optimized hyperparameters.",
+        "Pink bars — Graph (Fine-Tuned)": "Best model: graph features + optimized hyperparameters.",
     },
 
     # ── Gauge Chart ──────────────────────────────────────────
@@ -282,7 +286,7 @@ TERMS = {
 }
 
 # ─── Search ───────────────────────────────────────────────────
-query = st.text_input("🔍 Search all terms...", "").strip().lower()
+query = st.text_input("Search all terms...", "").strip().lower()
 st.markdown("---")
 
 # ─── Render by Category ───────────────────────────────────────

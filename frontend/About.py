@@ -27,13 +27,18 @@ load_css()
 API_URL = st.secrets.get("API_URL", "http://localhost:8000/api")
 
 from frontend.components.sidebar import render_sidebar
+from frontend.components.page_header import render_page_header
+from frontend.components.particles import render_particles
+
 render_sidebar()
+render_particles()
 
 # ── Hero Section ──
-st.title("MedGraph-Analytics")
-st.markdown(
-    "A full-stack biomedical analytics platform integrating **Neo4j Graph Data Science** "
-    "with a fine-tuned **Random Forest** classifier to predict novel drug-disease repurposing candidates."
+render_page_header(
+    "MedGraph-Analytics",
+    "about",
+    "A full-stack biomedical analytics platform integrating Neo4j Graph Data Science "
+    "with a fine-tuned Random Forest classifier to predict novel drug-disease repurposing candidates."
 )
 
 st.markdown("---")
@@ -68,13 +73,13 @@ st.markdown("---")
 st.markdown("### Platform Capabilities")
 f1, f2, f3 = st.columns(3)
 with f1:
-    st.markdown("##### 📊 Graph Analytics")
+    st.markdown("##### Graph Analytics")
     st.markdown("Explore PageRank, Betweenness Centrality, Eigenvector Centrality, and Louvain communities across the full knowledge graph.")
 with f2:
-    st.markdown("##### 🤖 ML Discovery")
+    st.markdown("##### ML Discovery")
     st.markdown("Predict novel drug-disease links with an adjustable confidence threshold. View Top 100 candidates or the complete list.")
 with f3:
-    st.markdown("##### 💊 Node Explorer")
+    st.markdown("##### Node Explorer")
     st.markdown("Select any compound or disease from 22,000+ nodes and inspect its profile, graph metrics, and all known connections.")
 
 st.markdown("---")

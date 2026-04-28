@@ -17,12 +17,19 @@ def load_css():
 
 load_css()
 from frontend.components.sidebar import render_sidebar
+from frontend.components.page_header import render_page_header
+from frontend.components.particles import render_particles
+
 render_sidebar()
+render_particles()
 
 API_URL = st.secrets.get("API_URL", "http://localhost:8000/api")
 
-st.title("💊 Drug & Disease Explorer")
-st.markdown("Select any node from the Biomedical Knowledge Graph to inspect its profile, graph metrics, connections, and real-time interactive visualizations.")
+render_page_header(
+    "Drug & Disease Explorer",
+    "drug_explorer",
+    "Select any node from the Biomedical Knowledge Graph to inspect its profile, graph metrics, connections, and real-time interactive visualizations."
+)
 
 st.markdown("---")
 
@@ -114,7 +121,7 @@ st.markdown("### Interactive Ego-Graph")
 st.caption(f"Showing the immediate neighborhood of **{node['name']}** (up to 30 neighbors)")
 
 if ego and ego.get('nodes'):
-    tab2d, tab3d = st.tabs(["📐 2D Network", "🌐 3D Network"])
+    tab2d, tab3d = st.tabs(["2D Network", "3D Network"])
     with tab2d:
         fig2d = create_2d_network(
             ego['nodes'], ego['edges'],

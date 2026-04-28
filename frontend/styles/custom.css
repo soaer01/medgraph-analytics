@@ -1,57 +1,170 @@
 /* ================================================================
-   MedGraph-Analytics — Professional Enterprise Theme v2
-   FIXED: Removed overly-broad selectors that broke Streamlit widgets
+   MedGraph-Analytics — Futuristic Neon Glassmorphism Theme v3
    ================================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@300;400;500&family=Orbitron:wght@400;500;700&display=swap');
 
 :root {
-    --bg-primary: #0f1117;
-    --bg-secondary: #1a1c24;
-    --bg-card: #1e2029;
-    --border: rgba(255, 255, 255, 0.08);
-    --border-hover: rgba(99, 179, 237, 0.35);
-    --text-primary: #f0f4f8;
-    --text-secondary: #a0aec0;
-    --text-muted: #718096;
-    --accent: #63b3ed;
-    --accent-green: #68d391;
-    --danger: #fc8181;
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
-    --radius: 10px;
+    /* ── Core Palette ── */
+    --bg-primary:    #0a0c14;
+    --bg-secondary:  #0f1219;
+    --bg-card:       rgba(15, 18, 28, 0.75);
+    --bg-card-solid: #12151f;
+
+    /* ── Neon Accents ── */
+    --neon-cyan:     #00f0ff;
+    --neon-magenta:  #ff00e5;
+    --neon-green:    #39ff14;
+    --neon-yellow:   #ffea00;
+    --neon-purple:   #d500f9;
+    --neon-pink:     #ff4081;
+
+    /* ── Glow Shadows ── */
+    --glow-cyan:     0 0 8px rgba(0,240,255,0.35), 0 0 25px rgba(0,240,255,0.12);
+    --glow-cyan-strong: 0 0 12px rgba(0,240,255,0.5), 0 0 40px rgba(0,240,255,0.2);
+    --glow-magenta:  0 0 8px rgba(255,0,229,0.3), 0 0 20px rgba(255,0,229,0.1);
+    --glow-green:    0 0 8px rgba(57,255,20,0.35), 0 0 20px rgba(57,255,20,0.12);
+
+    /* ── Glass ── */
+    --glass-border:  rgba(0,240,255,0.12);
+    --glass-border-hover: rgba(0,240,255,0.35);
+
+    /* ── Text ── */
+    --text-primary:  #e8ecf4;
+    --text-secondary:#8896ab;
+    --text-muted:    #5a6577;
+
+    /* ── Legacy Compat ── */
+    --accent:        #00f0ff;
+    --accent-green:  #39ff14;
+    --danger:        #ff4081;
+    --border:        rgba(0,240,255,0.08);
+    --border-hover:  rgba(0,240,255,0.35);
+    --shadow-sm:     0 1px 4px rgba(0,0,0,0.4);
+    --shadow-md:     0 4px 20px rgba(0,0,0,0.35);
+    --radius:        12px;
 }
 
-/* ── Base ── */
-html,
-body,
-.stApp {
+/* ================================================================
+   ANIMATIONS
+   ================================================================ */
+
+/* Page entrance — cinematic fade + scale + blur */
+@keyframes pageSlideIn {
+    0%   { opacity: 0; transform: translateY(24px) scale(0.97); filter: blur(6px); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* Staggered child fade-in */
+@keyframes staggerFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Neon pulse for headings */
+@keyframes neonPulse {
+    0%, 100% { text-shadow: 0 0 5px rgba(0,240,255,0.4), 0 0 15px rgba(0,240,255,0.15); }
+    50%      { text-shadow: 0 0 10px rgba(0,240,255,0.6), 0 0 30px rgba(0,240,255,0.25); }
+}
+
+/* Gradient shimmer for titles */
+@keyframes gradientShimmer {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Subtle float for metric cards */
+@keyframes cardFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-3px); }
+}
+
+/* Neon divider sweep */
+@keyframes neonSweep {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+/* Card glow breathe */
+@keyframes glowBreathe {
+    0%, 100% { box-shadow: 0 0 6px rgba(0,240,255,0.15), 0 0 15px rgba(0,240,255,0.05); }
+    50%      { box-shadow: 0 0 10px rgba(0,240,255,0.3), 0 0 30px rgba(0,240,255,0.1); }
+}
+
+/* ================================================================
+   BASE
+   ================================================================ */
+
+html, body, .stApp {
     background-color: var(--bg-primary) !important;
     color: var(--text-primary) !important;
     font-family: 'Roboto', sans-serif !important;
     -webkit-font-smoothing: antialiased;
 }
 
-/* ── Main content area ── */
+/* ── Main content area with entrance animation ── */
 .main .block-container {
     padding-top: 2rem !important;
     padding-left: 2.5rem !important;
     padding-right: 2.5rem !important;
+    animation: pageSlideIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Staggered fade for children */
+.main .block-container > div > div {
+    opacity: 0;
+    animation: staggerFadeIn 0.5s ease forwards;
+}
+.main .block-container > div > div:nth-child(1) { animation-delay: 0.05s; }
+.main .block-container > div > div:nth-child(2) { animation-delay: 0.12s; }
+.main .block-container > div > div:nth-child(3) { animation-delay: 0.19s; }
+.main .block-container > div > div:nth-child(4) { animation-delay: 0.26s; }
+.main .block-container > div > div:nth-child(5) { animation-delay: 0.33s; }
+.main .block-container > div > div:nth-child(6) { animation-delay: 0.40s; }
+.main .block-container > div > div:nth-child(7) { animation-delay: 0.47s; }
+.main .block-container > div > div:nth-child(8) { animation-delay: 0.54s; }
+.main .block-container > div > div:nth-child(9) { animation-delay: 0.61s; }
+.main .block-container > div > div:nth-child(10) { animation-delay: 0.68s; }
 
 /* ── Top header bar ── */
 [data-testid="stHeader"] {
     background-color: var(--bg-primary) !important;
     border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
 }
 
-/* ── Sidebar ── */
+/* ================================================================
+   SIDEBAR
+   ================================================================ */
+
 [data-testid="stSidebar"] {
-    background-color: var(--bg-secondary) !important;
-    border-right: 1px solid var(--border) !important;
+    background: linear-gradient(180deg, #0c0e18 0%, #0f1219 50%, #0a0c14 100%) !important;
+    border-right: 1px solid var(--glass-border) !important;
+    padding-top: 0rem !important;
 }
 
-/* Sidebar nav links — specific targeting only */
+[data-testid="stSidebar"] > div {
+    padding-top: 0rem !important;
+}
+
+/* Sidebar header (collapse button area) */
+[data-testid="stSidebarHeader"] {
+    padding: 0.25rem 0 0 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+[data-testid="stSidebarUserContent"] {
+    padding-top: 1.5rem !important;
+}
+
+/* Sidebar nav links */
+[data-testid="stSidebarNav"] {
+    display: none !important;
+}
+
 [data-testid="stSidebarNav"] a {
     color: var(--text-primary) !important;
     font-family: 'Roboto', sans-serif !important;
@@ -60,42 +173,76 @@ body,
     border-radius: var(--radius) !important;
     padding: 0.4rem 0.8rem !important;
     display: block;
-    transition: background 0.15s ease;
+    transition: all 0.2s ease;
 }
 
-[data-testid="stSidebarNav"] a:hover {
-    background-color: rgba(99, 179, 237, 0.08) !important;
+/* Sidebar page_link buttons — neon hover */
+[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"] {
+    transition: all 0.2s ease !important;
+    border-radius: 8px !important;
 }
 
-[data-testid="stSidebarNav"] a[aria-current="page"] {
-    background-color: rgba(99, 179, 237, 0.12) !important;
-    border-left: 3px solid var(--accent) !important;
-    color: var(--accent) !important;
+[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"]:hover {
+    background-color: rgba(0,240,255,0.06) !important;
+    box-shadow: inset 3px 0 0 var(--neon-cyan) !important;
 }
 
-/* Sidebar nav item text spans */
-[data-testid="stSidebarNav"] span {
-    color: inherit !important;
+[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"][aria-current="page"] {
+    background-color: rgba(0,240,255,0.08) !important;
+    box-shadow: inset 3px 0 0 var(--neon-cyan) !important;
 }
 
-/* Sidebar general text (caption, markdown) — only direct text nodes */
+/* Sidebar text */
 [data-testid="stSidebar"] .stMarkdown p,
 [data-testid="stSidebar"] .stCaption {
     color: var(--text-secondary) !important;
     font-size: 0.85rem !important;
 }
 
-/* ── Typography ── */
-/* h1 — page titles */
+/* Sidebar H2 title */
+[data-testid="stSidebarUserContent"] h2 {
+    margin-top: 0rem !important;
+    padding-top: 0rem !important;
+    margin-bottom: 0.2rem !important;
+    padding-bottom: 0.15rem !important;
+    line-height: 1.3 !important;
+}
+
+[data-testid="stSidebarUserContent"] [data-testid="stCaptionContainer"] {
+    margin-top: 0rem !important;
+    padding-top: 0rem !important;
+}
+
+/* Sidebar dividers — neon gradient line */
+[data-testid="stSidebar"] hr {
+    border: none !important;
+    height: 1px !important;
+    background: linear-gradient(90deg, transparent 0%, var(--neon-cyan) 20%, var(--neon-magenta) 50%, var(--neon-green) 80%, transparent 100%) !important;
+    background-size: 200% 100% !important;
+    animation: neonSweep 4s linear infinite !important;
+    margin: 0.8rem 0 !important;
+    opacity: 0.5;
+}
+
+/* ================================================================
+   TYPOGRAPHY
+   ================================================================ */
+
+/* h1 — page titles (neon gradient text) */
 h1 {
     font-family: 'Inter', sans-serif !important;
     font-size: 1.9rem !important;
     font-weight: 700 !important;
-    color: var(--text-primary) !important;
+    background: linear-gradient(135deg, var(--neon-cyan), #80f0ff, var(--neon-cyan)) !important;
+    background-size: 200% 200% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    animation: gradientShimmer 4s ease infinite !important;
     letter-spacing: 0em !important;
     margin-bottom: 0.4rem !important;
     padding-bottom: 0.5rem !important;
-    border-bottom: 2px solid var(--accent) !important;
+    border-bottom: 2px solid rgba(0,240,255,0.3) !important;
     display: inline-block !important;
 }
 
@@ -108,6 +255,7 @@ h2 {
     letter-spacing: 0em !important;
     margin-top: 2rem !important;
     margin-bottom: 0.75rem !important;
+    animation: neonPulse 3s ease infinite;
 }
 
 /* h3 — section headers */
@@ -115,15 +263,14 @@ h3 {
     font-family: 'Inter', sans-serif !important;
     font-size: 1.1rem !important;
     font-weight: 600 !important;
-    color: var(--text-primary) !important;
-    letter-spacing: 0em !important;
+    color: var(--neon-cyan) !important;
+    letter-spacing: 0.02em !important;
     margin-top: 1.8rem !important;
     margin-bottom: 0.6rem !important;
 }
 
-/* h4/h5 — sub-section */
-h4,
-h5 {
+/* h4/h5 */
+h4, h5 {
     font-family: 'Inter', sans-serif !important;
     font-weight: 600 !important;
     color: var(--text-secondary) !important;
@@ -132,132 +279,164 @@ h5 {
     margin-bottom: 0.4rem !important;
 }
 
-/* Body markdown paragraphs only — NOT internal widget divs */
-.stMarkdown p,
-.stMarkdown li {
+/* Body text */
+.stMarkdown p, .stMarkdown li {
     color: var(--text-primary) !important;
     font-family: 'Roboto', sans-serif !important;
     line-height: 1.7 !important;
 }
 
 .stMarkdown strong {
-    color: var(--text-primary) !important;
+    color: var(--neon-cyan) !important;
     font-weight: 600 !important;
 }
 
-.stCaption,
-.stCaption p {
+.stCaption, .stCaption p {
     color: var(--text-muted) !important;
     font-size: 0.82rem !important;
 }
 
-/* ── Metric Cards ── */
+/* ================================================================
+   METRIC CARDS — Neon Glassmorphism
+   ================================================================ */
+
 [data-testid="stMetric"] {
-    background-color: var(--bg-card) !important;
-    border: 1px solid var(--border) !important;
+    background: var(--bg-card) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid var(--glass-border) !important;
     border-radius: var(--radius) !important;
     padding: 1.1rem 1.4rem !important;
-    box-shadow: var(--shadow-sm) !important;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: var(--glow-cyan) !important;
+    transition: all 0.3s ease !important;
+    animation: glowBreathe 4s ease infinite, cardFloat 6s ease-in-out infinite;
 }
 
 [data-testid="stMetric"]:hover {
-    border-color: var(--border-hover) !important;
-    box-shadow: var(--shadow-md) !important;
+    border-color: var(--glass-border-hover) !important;
+    box-shadow: var(--glow-cyan-strong) !important;
+    transform: translateY(-4px) !important;
+    animation: none !important;
 }
 
 [data-testid="stMetricValue"] {
-    font-family: 'Inter', sans-serif !important;
-    font-size: 1.8rem !important;
+    font-family: 'Orbitron', 'Inter', sans-serif !important;
+    font-size: 1.7rem !important;
     font-weight: 700 !important;
-    color: var(--accent) !important;
+    color: var(--neon-cyan) !important;
+    text-shadow: 0 0 8px rgba(0,240,255,0.3);
 }
 
 [data-testid="stMetricLabel"] {
     color: var(--text-secondary) !important;
-    font-size: 0.8rem !important;
+    font-size: 0.78rem !important;
     text-transform: uppercase;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.08em;
     font-weight: 500 !important;
 }
 
-/* ── Buttons ── */
-.stButton>button {
+/* ================================================================
+   BUTTONS — Neon Glow
+   ================================================================ */
+
+.stButton > button {
     font-family: 'Inter', sans-serif !important;
     font-weight: 600 !important;
     font-size: 0.88rem !important;
     border-radius: 8px !important;
     padding: 0.5rem 1.6rem !important;
-    transition: all 0.18s ease !important;
-    box-shadow: var(--shadow-sm) !important;
+    transition: all 0.25s ease !important;
+    border: 1px solid var(--glass-border) !important;
+    background: var(--bg-card) !important;
+    color: var(--neon-cyan) !important;
+    box-shadow: var(--glow-cyan) !important;
 }
 
-/* Primary button (type="primary") */
-.stButton>button[kind="primary"] {
-    background-color: var(--accent) !important;
-    color: var(--bg-primary) !important;
-    border: none !important;
+.stButton > button:hover {
+    border-color: var(--neon-cyan) !important;
+    box-shadow: var(--glow-cyan-strong) !important;
+    transform: translateY(-2px) !important;
+    color: #fff !important;
+    background: rgba(0,240,255,0.08) !important;
 }
 
-.stButton>button[kind="primary"]:hover {
-    background-color: #90cdf4 !important;
-    transform: translateY(-1px) !important;
-    box-shadow: var(--shadow-md) !important;
+.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(255,0,229,0.1)) !important;
+    border: 1px solid var(--neon-cyan) !important;
+    color: #fff !important;
 }
 
-/* Secondary button */
-.stButton>button[kind="secondary"] {
-    background-color: transparent !important;
-    color: var(--accent) !important;
-    border: 1px solid var(--accent) !important;
+.stButton > button[kind="primary"]:hover {
+    background: linear-gradient(135deg, rgba(0,240,255,0.25), rgba(255,0,229,0.15)) !important;
+    box-shadow: var(--glow-cyan-strong), var(--glow-magenta) !important;
+    transform: translateY(-2px) !important;
 }
 
-.stButton>button[kind="secondary"]:hover {
-    background-color: rgba(99, 179, 237, 0.1) !important;
-}
+/* ================================================================
+   INPUTS & SELECTBOXES
+   ================================================================ */
 
-/* ── Inputs & Selectboxes ── */
-.stSelectbox [data-baseweb="select"]>div:first-child,
+.stSelectbox [data-baseweb="select"] > div:first-child,
 .stTextInput [data-baseweb="input"] {
-    background-color: var(--bg-card) !important;
-    border-color: var(--border) !important;
+    background-color: var(--bg-card-solid) !important;
+    border: 1px solid var(--glass-border) !important;
     border-radius: 8px !important;
     color: var(--text-primary) !important;
-    transition: border-color 0.18s;
+    transition: all 0.2s ease;
 }
 
-.stSelectbox [data-baseweb="select"]>div:first-child:focus-within,
+.stSelectbox [data-baseweb="select"] > div:first-child:focus-within,
 .stTextInput [data-baseweb="input"]:focus-within {
-    border-color: var(--accent) !important;
-    box-shadow: 0 0 0 2px rgba(99, 179, 237, 0.18) !important;
+    border-color: var(--neon-cyan) !important;
+    box-shadow: 0 0 0 2px rgba(0,240,255,0.15), var(--glow-cyan) !important;
 }
 
-/* ── Tabs ── */
+/* ================================================================
+   TABS
+   ================================================================ */
+
 [data-testid="stTabs"] button {
     font-family: 'Inter', sans-serif !important;
     color: var(--text-secondary) !important;
     font-weight: 500 !important;
     border-radius: 6px 6px 0 0 !important;
+    transition: all 0.2s ease;
 }
 
 [data-testid="stTabs"] button[aria-selected="true"] {
-    color: var(--accent) !important;
-    border-bottom: 2px solid var(--accent) !important;
+    color: var(--neon-cyan) !important;
+    border-bottom: 2px solid var(--neon-cyan) !important;
+    text-shadow: 0 0 8px rgba(0,240,255,0.3);
 }
 
-/* ── Dataframes ── */
+/* ================================================================
+   DATAFRAMES
+   ================================================================ */
+
 [data-testid="stDataFrame"] {
-    border: 1px solid var(--border) !important;
+    border: 1px solid var(--glass-border) !important;
     border-radius: var(--radius) !important;
     overflow: hidden;
+    box-shadow: var(--glow-cyan) !important;
 }
 
-/* ── Expanders ── */
+/* ================================================================
+   EXPANDERS — Neon Glass
+   ================================================================ */
+
 [data-testid="stExpander"] {
-    background-color: var(--bg-card) !important;
-    border: 1px solid var(--border) !important;
+    background: var(--bg-card) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid var(--glass-border) !important;
     border-radius: var(--radius) !important;
     margin-bottom: 0.5rem !important;
+    box-shadow: 0 0 5px rgba(0,240,255,0.08) !important;
+    transition: all 0.25s ease;
+}
+
+[data-testid="stExpander"]:hover {
+    border-color: var(--glass-border-hover) !important;
+    box-shadow: var(--glow-cyan) !important;
 }
 
 [data-testid="stExpander"] summary {
@@ -268,125 +447,194 @@ h5 {
     padding: 0.8rem 1rem !important;
 }
 
-/* Expander arrow SVG */
 [data-testid="stExpander"] summary svg {
-    fill: var(--text-secondary) !important;
+    fill: var(--neon-cyan) !important;
 }
 
-/* ── Info/Alert boxes ── */
+/* ================================================================
+   ALERTS
+   ================================================================ */
+
 [data-testid="stAlert"] {
     border-radius: var(--radius) !important;
+    border: 1px solid var(--glass-border) !important;
+    backdrop-filter: blur(8px) !important;
 }
 
-/* ── Dividers ── */
+/* ================================================================
+   DIVIDERS — Animated neon gradient
+   ================================================================ */
+
 hr {
-    border-color: var(--border) !important;
+    border: none !important;
+    height: 1px !important;
+    background: linear-gradient(90deg, transparent 0%, var(--neon-cyan) 15%, var(--neon-magenta) 50%, var(--neon-green) 85%, transparent 100%) !important;
+    background-size: 200% 100% !important;
+    animation: neonSweep 4s linear infinite !important;
     margin: 1.8rem 0 !important;
+    opacity: 0.4;
 }
 
-/* ── Slider ── */
+/* ================================================================
+   SLIDER
+   ================================================================ */
+
 [data-testid="stSlider"] [data-baseweb="slider"] [role="slider"] {
-    background-color: var(--accent) !important;
+    background-color: var(--neon-cyan) !important;
+    box-shadow: 0 0 6px rgba(0,240,255,0.5) !important;
 }
 
 [data-testid="stSlider"] [data-baseweb="slider"] div[data-testid="stSlider-thumb"] {
-    background-color: var(--accent) !important;
+    background-color: var(--neon-cyan) !important;
 }
 
-/* ── Scrollbar ── */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
+/* ================================================================
+   SCROLLBAR — Neon
+   ================================================================ */
 
-::-webkit-scrollbar-track {
-    background: var(--bg-primary);
-}
-
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
 ::-webkit-scrollbar-thumb {
-    background: rgba(160, 174, 192, 0.2);
+    background: rgba(0,240,255,0.25);
     border-radius: 3px;
+    box-shadow: 0 0 4px rgba(0,240,255,0.2);
 }
-
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(99, 179, 237, 0.4);
+    background: rgba(0,240,255,0.5);
+    box-shadow: 0 0 8px rgba(0,240,255,0.4);
 }
 
-/* Hide default Streamlit sidebar nav in favor of custom page links */
-[data-testid="stSidebarNav"] {
-    display: none !important;
+/* ================================================================
+   NEON PAGE HEADER COMPONENT
+   ================================================================ */
+
+.neon-page-header {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 0;
+    animation: staggerFadeIn 0.6s ease forwards;
 }
 
-
-/* Remove empty space at the top of the sidebar */
-[data-testid="stSidebar"] [data-testid="stSidebarHeader"] {
-    padding-top: 1rem !important;
-    padding-bottom: 0rem !important;
-    height: auto !important;
+.neon-page-header .neon-icon svg {
+    width: 48px;
+    height: 48px;
+    filter: drop-shadow(0 0 8px rgba(0,240,255,0.5)) drop-shadow(0 0 20px rgba(0,240,255,0.2));
 }
 
-[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
-    padding-top: 0rem !important;
-}
-
-
-/* Force H2 and all inner sidebar elements to start at the very top */
-[data-testid="stSidebarUserContent"] {
-    padding-top: 0rem !important;
-}
-
-[data-testid="stSidebarUserContent"]>div:first-child {
-    padding-top: 0rem !important;
-}
-
-[data-testid="stSidebarUserContent"] h2 {
-    margin-top: 0rem !important;
-    padding-top: 0rem !important;
-}
-
-section[data-testid="stSidebar"]>div {
-    padding-top: 0rem !important;
-}
-
-
-/* Ultimate top-spacing removal for Streamlit Sidebar */
-[data-testid="stSidebar"] {
-    padding-top: 0rem !important;
-}
-
-[data-testid="stSidebar"]>div {
-    padding-top: 0rem !important;
-}
-
-[data-testid="stSidebarUserContent"] {
-    padding-top: 3rem !important;
-    /* Space above title */
-}
-
-[data-testid="stSidebarHeader"] {
-    padding: 0 !important;
+.neon-page-header .neon-title {
+    font-family: 'Orbitron', 'Inter', sans-serif !important;
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    background: linear-gradient(135deg, var(--neon-cyan), #80f0ff, var(--neon-magenta)) !important;
+    background-size: 300% 300% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    animation: gradientShimmer 5s ease infinite !important;
     margin: 0 !important;
-    height: auto !important;
-    min-height: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    display: inline !important;
+    line-height: 1.3 !important;
 }
 
-/* Center the title vertically in the top space by adding equal space below the first divider */
-[data-testid="stSidebarUserContent"] hr:first-of-type {
-    margin-bottom: 1rem !important;
-    padding-top: 1rem !important;
+.neon-page-header .neon-subtitle {
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    margin: 0.15rem 0 0 0;
+    padding: 0;
+    line-height: 1.4;
 }
 
-/* Tighten the gap between Title and Caption */
-[data-testid="stSidebarUserContent"] h2 {
-    margin-top: 0rem !important;
-    padding-top: 0rem !important;
-    margin-bottom: 0rem !important;
-    padding-bottom: 0.2rem !important;
-    line-height: 1.2 !important;
+/* ================================================================
+   SIDEBAR NEON TITLE (rendered via HTML)
+   ================================================================ */
+
+.sidebar-neon-title {
+    font-family: 'Orbitron', 'Inter', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--neon-cyan), #80f0ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    margin: 0;
+    padding: 0;
+    line-height: 1.3;
+    letter-spacing: 0.03em;
 }
 
-[data-testid="stSidebarUserContent"] [data-testid="stCaptionContainer"],
-[data-testid="stSidebarUserContent"] .stMarkdown p {
-    margin-top: 0rem !important;
-    padding-top: 0rem !important;
+.sidebar-neon-subtitle {
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin: 0.15rem 0 0 0;
+    letter-spacing: 0.04em;
+}
+
+.sidebar-neon-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.3rem 0;
+    transition: all 0.2s ease;
+}
+
+.sidebar-neon-link:hover {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 6px rgba(0,240,255,0.3);
+}
+
+.sidebar-neon-link svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--text-secondary);
+    transition: fill 0.2s ease;
+}
+
+.sidebar-neon-link:hover svg {
+    fill: var(--neon-cyan);
+    filter: drop-shadow(0 0 4px rgba(0,240,255,0.4));
+}
+
+/* Health status glow dots */
+.health-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.health-dot.online {
+    background: var(--neon-green);
+    box-shadow: 0 0 6px rgba(57,255,20,0.6), 0 0 12px rgba(57,255,20,0.2);
+}
+
+.health-dot.offline {
+    background: var(--neon-pink);
+    box-shadow: 0 0 6px rgba(255,64,129,0.5);
+}
+
+/* ================================================================
+   PARTICLE CANVAS (injected by particles.py)
+   ================================================================ */
+
+#medgraph-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.12;
 }

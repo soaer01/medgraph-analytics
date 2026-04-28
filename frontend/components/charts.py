@@ -2,20 +2,20 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 
-# Professional Muted Palette
+# Neon Palette
 COLORS = {
     'bg': 'rgba(0,0,0,0)',
-    'text': '#f0f4f8',
-    'text_muted': '#a0aec0',
-    'accent': '#63b3ed',
-    'accent_green': '#68d391',
-    'accent_coral': '#fc8181',
-    'grid': 'rgba(255,255,255,0.06)',
-    'palette': ['#63b3ed', '#68d391', '#fc8181', '#f6e05e', '#b794f4', '#4fd1c5']
+    'text': '#e8ecf4',
+    'text_muted': '#8896ab',
+    'accent': '#00f0ff',
+    'accent_green': '#39ff14',
+    'accent_coral': '#ff4081',
+    'grid': 'rgba(0,240,255,0.05)',
+    'palette': ['#00f0ff', '#39ff14', '#ff4081', '#ffea00', '#d500f9', '#00e5ff']
 }
 
 def apply_theme(fig):
-    """Apply a clean, professional dark theme to any Plotly figure."""
+    """Apply the neon dark theme to any Plotly figure."""
     fig.update_layout(
         paper_bgcolor=COLORS['bg'],
         plot_bgcolor=COLORS['bg'],
@@ -37,10 +37,11 @@ def apply_theme(fig):
         margin=dict(l=50, r=30, t=50, b=50),
         title_font=dict(size=16, color=COLORS['text'], family="Inter, sans-serif"),
         hoverlabel=dict(
-            bgcolor='#1e2029',
+            bgcolor='#12151f',
             font_size=13,
             font_family="Roboto, sans-serif",
-            font_color=COLORS['text']
+            font_color=COLORS['text'],
+            bordercolor='rgba(0,240,255,0.3)'
         )
     )
     return fig
@@ -69,8 +70,9 @@ def create_feature_importance_chart(importance_data):
         orientation='h',
         marker=dict(
             color=df['importance_score'],
-            colorscale=[[0, '#1a365d'], [0.5, '#63b3ed'], [1, '#bee3f8']],
-            showscale=False
+            colorscale=[[0, '#0a1628'], [0.3, '#00f0ff'], [0.7, '#39ff14'], [1, '#d500f9']],
+            showscale=False,
+            line=dict(width=1, color='rgba(0,240,255,0.3)')
         )
     ))
     fig.update_layout(
@@ -85,7 +87,8 @@ def create_distribution_chart(data, metric_name):
     fig = go.Figure(data=[go.Bar(
         x=data['bin_edges'][:-1], y=data['counts'],
         marker_color=COLORS['accent'],
-        marker_line_width=0
+        marker_line_width=0,
+        opacity=0.85,
     )])
     fig.update_layout(
         title=f"{metric_name.replace('_', ' ').title()} — Distribution",
@@ -100,19 +103,19 @@ def create_gauge_chart(probability):
     fig = go.Figure(go.Indicator(
         mode="gauge+number+delta",
         value=probability * 100,
-        number={'suffix': '%', 'font': {'size': 40, 'color': COLORS['text']}},
+        number={'suffix': '%', 'font': {'size': 40, 'color': COLORS['text'], 'family': 'Orbitron, Inter, sans-serif'}},
         title={'text': "Repurposing Confidence", 'font': {'size': 16, 'color': COLORS['text_muted']}},
         gauge={
             'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': COLORS['text_muted'],
                      'tickfont': {'color': COLORS['text_muted']}},
             'bar': {'color': COLORS['accent']},
-            'bgcolor': 'rgba(255,255,255,0.04)',
+            'bgcolor': 'rgba(0,240,255,0.03)',
             'borderwidth': 1,
-            'bordercolor': 'rgba(255,255,255,0.08)',
+            'bordercolor': 'rgba(0,240,255,0.15)',
             'steps': [
-                {'range': [0, 40], 'color': 'rgba(252, 129, 129, 0.15)'},
-                {'range': [40, 70], 'color': 'rgba(246, 224, 94, 0.12)'},
-                {'range': [70, 100], 'color': 'rgba(104, 211, 145, 0.15)'}
+                {'range': [0, 40], 'color': 'rgba(255, 64, 129, 0.12)'},
+                {'range': [40, 70], 'color': 'rgba(255, 234, 0, 0.08)'},
+                {'range': [70, 100], 'color': 'rgba(57, 255, 20, 0.12)'}
             ],
         }
     ))
@@ -125,7 +128,10 @@ def create_donut_chart(data_dict, title):
     
     fig = go.Figure(data=[go.Pie(
         labels=labels, values=values, hole=.45,
-        marker=dict(colors=COLORS['palette'], line=dict(color=COLORS['bg'], width=2)),
+        marker=dict(
+            colors=COLORS['palette'],
+            line=dict(color='rgba(0,240,255,0.2)', width=2)
+        ),
         textfont=dict(size=12, color=COLORS['text']),
         hoverinfo='label+percent+value'
     )])

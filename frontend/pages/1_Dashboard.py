@@ -17,12 +17,19 @@ def load_css():
 
 load_css()
 from frontend.components.sidebar import render_sidebar
+from frontend.components.page_header import render_page_header
+from frontend.components.particles import render_particles
+
 render_sidebar()
+render_particles()
 
 API_URL = st.secrets.get("API_URL", "http://localhost:8000/api")
 
-st.title("📊 Executive Dashboard")
-st.markdown("High-level overview of the Biomedical Knowledge Graph structure and ML model performance.")
+render_page_header(
+    "Executive Dashboard",
+    "dashboard",
+    "High-level overview of the Biomedical Knowledge Graph structure and ML model performance."
+)
 
 st.markdown("---")
 

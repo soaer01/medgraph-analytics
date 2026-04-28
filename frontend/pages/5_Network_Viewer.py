@@ -14,11 +14,18 @@ def load_css():
 
 load_css()
 from frontend.components.sidebar import render_sidebar
+from frontend.components.page_header import render_page_header
+from frontend.components.particles import render_particles
+
 render_sidebar()
+render_particles()
 
+render_page_header(
+    "Network Viewer",
+    "network_viewer",
+    "Interactive 3D visualization of the Biomedical Knowledge Graph communities and hub nodes."
+)
 
-st.title("🧬 Network Viewer")
-st.markdown("Interactive 3D visualization of the Biomedical Knowledge Graph communities and hub nodes.")
 st.markdown("---")
 
 # Subgraph visuals

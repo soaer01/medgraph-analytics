@@ -19,12 +19,19 @@ def load_css():
 
 load_css()
 from frontend.components.sidebar import render_sidebar
+from frontend.components.page_header import render_page_header
+from frontend.components.particles import render_particles
+
 render_sidebar()
+render_particles()
 
 API_URL = st.secrets.get("API_URL", "http://localhost:8000/api")
 
-st.title("🤖 ML Predictions & Discoveries")
-st.markdown("Analyze the Random Forest classifier and explore novel drug-disease repurposing candidates.")
+render_page_header(
+    "ML Predictions & Discoveries",
+    "ml_predictions",
+    "Analyze the Random Forest classifier and explore novel drug-disease repurposing candidates."
+)
 
 st.markdown("---")
 
@@ -53,7 +60,7 @@ st.markdown("---")
 # ═══════════════════════════════════════════════
 # Section 2 — Novel Drug Repurposing Discoveries
 # ═══════════════════════════════════════════════
-st.markdown("### 🔍 Novel Drug Repurposing Discoveries")
+st.markdown("### Novel Drug Repurposing Discoveries")
 st.markdown(
     "Adjust the confidence threshold to explore predicted links between Compounds and Diseases "
     "that **do not currently exist** in the Knowledge Graph."
@@ -99,7 +106,7 @@ st.markdown("---")
 # ═══════════════════════════════════════════════
 # Section 3 — Real-time Pair Prediction
 # ═══════════════════════════════════════════════
-st.markdown("### 🧪 Real-time Pair Prediction")
+st.markdown("### Real-time Pair Prediction")
 st.markdown("Select a Compound and a Disease to get an instant ML confidence score.")
 
 @st.cache_data(ttl=300)
@@ -162,4 +169,3 @@ if run and compounds and diseases:
             st.error(f"Prediction failed: {r.json().get('detail', 'Unknown error')}")
     except Exception as e:
         st.error(f"Request failed: {e}")
-
