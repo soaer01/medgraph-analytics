@@ -603,6 +603,19 @@ hr {
     line-height: 1.3 !important;
 }
 
+.neon-page-header .platform-logo {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 12px;
+}
+
+.neon-page-header .platform-logo svg {
+    width: 28px;
+    height: 28px;
+    filter: drop-shadow(0 0 5px var(--neon-cyan));
+    opacity: 0.9;
+}
+
 .neon-page-header .neon-subtitle {
     font-family: 'Roboto', sans-serif;
     font-size: 0.92rem;

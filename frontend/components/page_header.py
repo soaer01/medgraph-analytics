@@ -96,6 +96,12 @@ _SVG_TERMINOLOGY = '''<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.
   <line x1="39" y1="17" x2="42" y2="20" stroke="#d500f9" stroke-width="1.5"/>
 </svg>'''
 
+_SVG_LOGO = '''<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L4.5 20.29C4.21 21 4.7 21.75 5.44 21.75H18.56C19.3 21.75 19.79 21 19.5 20.29L12 2Z" stroke="#00f0ff" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M12 2V21.75" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="2 2"/>
+  <circle cx="12" cy="11" r="3" stroke="#ff00e5" stroke-width="2"/>
+</svg>'''
+
 # Map page names to SVG icons
 PAGE_ICONS = {
     'about': _SVG_ABOUT,
@@ -123,7 +129,10 @@ def render_page_header(title: str, page_key: str, subtitle: str = ""):
     <div class="neon-page-header">
         <div class="neon-icon">{icon_svg}</div>
         <div>
-            <h1 class="neon-title"><span style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); opacity: 0.8; margin-right: 12px;">⚗</span>{title}</h1>
+            <h1 class="neon-title">
+                <span class="platform-logo">{_SVG_LOGO}</span>
+                {title}
+            </h1>
             {subtitle_html}
         </div>
     </div>
