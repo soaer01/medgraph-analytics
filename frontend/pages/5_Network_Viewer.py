@@ -6,13 +6,15 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 import streamlit as st
 import os
 
-def load_css():
+@st.cache_data(show_spinner=False)
+def get_css():
     css_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "styles", "custom.css")
     if os.path.exists(css_path):
         with open(css_path) as f:
-            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+            return f.read()
+    return ""
 
-load_css()
+st.markdown(f"<style>{get_css()}</style>", unsafe_allow_html=True)
 from frontend.components.sidebar import render_sidebar
 from frontend.components.page_header import render_page_header
 from frontend.components.particles import render_particles

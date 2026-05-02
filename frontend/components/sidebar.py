@@ -78,3 +78,10 @@ def render_sidebar():
 
         st.markdown("---")
         st.caption("BS Data Science · 2026")
+
+        # Auto-retry mechanism if offline
+        if not data_ok or not model_ok:
+            import time
+            with st.spinner("Backend offline. Retrying in 5 seconds..."):
+                time.sleep(5)
+                st.rerun()

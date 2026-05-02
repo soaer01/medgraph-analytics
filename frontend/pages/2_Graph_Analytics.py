@@ -10,16 +10,19 @@ import os
 from frontend.components.charts import create_distribution_chart
 from frontend.components.tables import show_generic_table
 
-def load_css():
+@st.cache_data(show_spinner=False)
+def get_css():
     css_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "styles", "custom.css")
     if os.path.exists(css_path):
         with open(css_path) as f:
-            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+            return f.read()
+    return ""
 
-load_css()
+st.markdown(f"<style>{get_css()}</style>", unsafe_allow_html=True)
 from frontend.components.sidebar import render_sidebar
 from frontend.components.page_header import render_page_header
 from frontend.components.particles import render_particles
+from frontend.utils.api_cache import fetch_distribution, fetch_top_nodes, fetch_communities
 
 render_sidebar()
 render_particles()
@@ -49,22 +52,6 @@ st.markdown("---")
 # ── Distribution + Top Nodes ──
 col1, col2 = st.columns([1, 1], gap="large")
 
-@st.cache_data(ttl=300)
-def fetch_distribution(metric, bins=50):
-    try:
-        r = requests.get(f"{API_URL}/graph-metrics/distribution/{metric}?bins={bins}", timeout=10)
-        return r.json() if r.status_code == 200 else None
-    except Exception:
-        return None
-
-@st.cache_data(ttl=300)
-def fetch_top_nodes(metric, limit=100):
-    try:
-        r = requests.get(f"{API_URL}/graph-metrics/top/{metric}?limit={limit}", timeout=10)
-        return r.json() if r.status_code == 200 else None
-    except Exception:
-        return None
-
 with col1:
     st.markdown(f"### {metric_labels[selected_metric]} Distribution")
     dist = fetch_distribution(selected_metric)
@@ -87,9 +74,9 @@ if selected_metric == 'louvain':
     st.markdown("---")
     st.markdown("### Louvain Community Sizes")
     try:
-        r = requests.get(f"{API_URL}/graph-metrics/communities", timeout=10)
-        if r.status_code == 200:
-            comm_df = pd.DataFrame(r.json())
+        comm_data = fetch_communities()
+        if comm_data:
+            comm_df = pd.DataFrame(comm_data)
             st.bar_chart(comm_df.set_index('community')['size'], use_container_width=True)
     except Exception as e:
         st.error(f"Error: {e}")

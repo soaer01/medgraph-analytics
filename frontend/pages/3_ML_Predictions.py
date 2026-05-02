@@ -11,16 +11,19 @@ from frontend.components.charts import create_feature_importance_chart, create_g
 from frontend.components.tables import show_discoveries_table
 from frontend.components.network_graph import create_2d_network
 
-def load_css():
+@st.cache_data(show_spinner=False)
+def get_css():
     css_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "styles", "custom.css")
     if os.path.exists(css_path):
         with open(css_path) as f:
-            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+            return f.read()
+    return ""
 
-load_css()
+st.markdown(f"<style>{get_css()}</style>", unsafe_allow_html=True)
 from frontend.components.sidebar import render_sidebar
 from frontend.components.page_header import render_page_header
 from frontend.components.particles import render_particles
+from frontend.utils.api_cache import fetch_model_metrics, fetch_all_discoveries, fetch_node_options, fetch_prediction, fetch_relationship_graph
 
 render_sidebar()
 render_particles()
@@ -38,13 +41,6 @@ st.markdown("---")
 # ═══════════════════════════════════════════════
 # Section 1 — Feature Importance
 # ═══════════════════════════════════════════════
-@st.cache_data(ttl=300)
-def fetch_model_metrics():
-    try:
-        r = requests.get(f"{API_URL}/predictions/model-metrics", timeout=10)
-        return r.json() if r.status_code == 200 else None
-    except Exception:
-        return None
 
 model_data = fetch_model_metrics()
 
@@ -65,19 +61,6 @@ st.markdown(
     "Adjust the confidence threshold to explore predicted links between Compounds and Diseases "
     "that **do not currently exist** in the Knowledge Graph."
 )
-
-@st.cache_data(ttl=600, show_spinner="Loading discovery candidates from model...")
-def fetch_all_discoveries():
-    """Fetch ALL discovery candidates from the backend once, then filter locally."""
-    try:
-        r = requests.get(f"{API_URL}/predictions/discoveries?threshold=0.0&limit=50000", timeout=60)
-        if r.status_code == 200:
-            data = r.json()
-            if data:
-                return pd.DataFrame(data)
-    except Exception:
-        pass
-    return pd.DataFrame()
 
 all_disc = fetch_all_discoveries()
 
@@ -109,16 +92,6 @@ st.markdown("---")
 st.markdown("### Real-time Pair Prediction")
 st.markdown("Select a Compound and a Disease to get an instant ML confidence score.")
 
-@st.cache_data(ttl=300)
-def fetch_node_options(kind):
-    try:
-        r = requests.get(f"{API_URL}/explorer/nodes?kind={kind}&limit=1000", timeout=10)
-        if r.status_code == 200:
-            return {f"{n['name']}  —  {n['id']}": n['id'] for n in r.json()}
-    except Exception:
-        pass
-    return {}
-
 compounds = fetch_node_options("Compound")
 diseases = fetch_node_options("Disease")
 
@@ -127,45 +100,48 @@ with p1:
     comp_key = st.selectbox("Compound", list(compounds.keys()) if compounds else ["No data"])
 with p2:
     dis_key = st.selectbox("Disease", list(diseases.keys()) if diseases else ["No data"])
-with p3:
-    st.write("")
-    st.write("")
-    run = st.button("Predict Link", type="primary", use_container_width=True)
 
-if run and compounds and diseases:
+if compounds and diseases:
     comp_id = compounds[comp_key]
     dis_id  = diseases[dis_key]
-    payload = {"compound_id": comp_id, "disease_id": dis_id}
-    try:
-        r = requests.post(f"{API_URL}/predictions/", json=payload, timeout=10)
-        if r.status_code == 200:
-            result = r.json()
-            r1, r2 = st.columns(2)
-            with r1:
-                st.plotly_chart(create_gauge_chart(result['probability']), use_container_width=True)
-            with r2:
-                st.markdown("#### Feature Vector")
-                st.json(result['feature_values'])
+    
+    with st.spinner("Analyzing biological relationship..."):
+        result = fetch_prediction(comp_id, dis_id)
+    if result:
+        # Stack vertically for vertical alignment
+        st.plotly_chart(create_gauge_chart(result['probability']), use_container_width=True)
+        
+        st.markdown("#### Feature Vector")
+        # Display features in a clean, scrollable neon card
+        features_html = "".join([
+            f"<div style='display:flex; justify-content:space-between; padding:8px 15px; border-bottom:1px solid rgba(0,240,255,0.05);'>"
+            f"<span style='color:#8896ab;'>{k.replace('_', ' ').title()}</span>"
+            f"<span style='color:#00f0ff; font-family:monospace; font-weight:bold;'>{v:.4f}</span>"
+            f"</div>" 
+            for k, v in result['feature_values'].items()
+        ])
+        st.markdown(f"""
+            <div class="neon-card" style="max-height:400px; overflow-y:auto; padding:5px; margin-top:10px; margin-bottom:25px;">
+                {features_html}
+            </div>
+        """, unsafe_allow_html=True)
 
-            # ── Relationship Graph ──────────────────────
-            st.markdown("#### Relationship Graph")
-            st.caption("The 2D ego-graphs of both nodes overlaid — showing their shared neighborhood.")
-            try:
-                ego_c = requests.get(f"{API_URL}/explorer/ego-graph/{comp_id}?max_neighbors=20", timeout=10).json()
-                ego_d = requests.get(f"{API_URL}/explorer/ego-graph/{dis_id}?max_neighbors=20", timeout=10).json()
+        # ── Relationship Graph ──────────────────────
+        st.markdown("#### Relationship Graph")
+        st.caption("Visualizing shared neighborhood: nodes connected to both the Compound and Disease.")
+        try:
+            rel_graph = fetch_relationship_graph(comp_id, dis_id)
 
-                # Merge both ego graphs
-                merged_nodes = {n['id']: n for n in ego_c.get('nodes', []) + ego_d.get('nodes', [])}
-                merged_edges = ego_c.get('edges', []) + ego_d.get('edges', [])
-
+            if rel_graph and rel_graph.get('nodes'):
                 fig_rel = create_2d_network(
-                    list(merged_nodes.values()), merged_edges,
-                    title=f"Relationship: {comp_key.split('—')[0].strip()} ↔ {dis_key.split('—')[0].strip()}"
+                    rel_graph['nodes'], rel_graph['edges'],
+                    title=f"Relationship: {comp_key.split('—')[0].strip()} ↔ {dis_key.split('—')[0].strip()}",
+                    focus_ids=[comp_id, dis_id]
                 )
                 st.plotly_chart(fig_rel, use_container_width=True)
-            except Exception:
-                st.info("Relationship graph unavailable.")
-        else:
-            st.error(f"Prediction failed: {r.json().get('detail', 'Unknown error')}")
-    except Exception as e:
-        st.error(f"Request failed: {e}")
+            else:
+                st.info("No shared connections found for this pair.")
+        except Exception:
+            st.info("Relationship graph unavailable.")
+    else:
+        st.error("Prediction failed or backend unavailable.")

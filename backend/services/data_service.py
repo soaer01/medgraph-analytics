@@ -86,6 +86,84 @@ class DataService:
         edges = all_edges[['source', 'target', 'metaedge']].to_dict('records')
         return {'nodes': nodes, 'edges': edges}
 
+    def get_k_hop_graph(self, node_id: str, depth: int = 1, max_per_hop: int = 20) -> dict:
+        """Fetch neighbors up to K hops away."""
+        visited_nodes = {node_id}
+        all_edges = pd.DataFrame(columns=['source', 'target', 'metaedge'])
+        
+        current_hop_nodes = {node_id}
+        
+        for _ in range(depth):
+            if not current_hop_nodes:
+                break
+            
+            # Find all edges connected to any node in current hop
+            mask = self.edges['source'].isin(current_hop_nodes) | self.edges['target'].isin(current_hop_nodes)
+            hop_edges = self.edges[mask].head(len(current_hop_nodes) * max_per_hop)
+            
+            if hop_edges.empty:
+                break
+                
+            all_edges = pd.concat([all_edges, hop_edges]).drop_duplicates()
+            
+            # Next hop nodes are the ones we just found that we haven't visited
+            found_nodes = set(hop_edges['source'].tolist() + hop_edges['target'].tolist())
+            current_hop_nodes = found_nodes - visited_nodes
+            visited_nodes.update(found_nodes)
+            
+            if len(visited_nodes) > 200: # Safety cap
+                break
+
+        # Build final node/edge lists
+        nodes = []
+        for nid in visited_nodes:
+            n = self.get_node(nid)
+            if n:
+                nodes.append(n)
+        
+        edges = all_edges[['source', 'target', 'metaedge']].to_dict('records')
+        return {'nodes': nodes, 'edges': edges}
+
+    def get_relationship_graph(self, node_a: str, node_b: str, max_shared: int = 50, max_unique: int = 15) -> dict:
+        """Return a graph showing shared and unique neighbors between two nodes."""
+        na = self.get_node(node_a)
+        nb = self.get_node(node_b)
+        if not na or not nb:
+            return {'nodes': [], 'edges': []}
+
+        # Get neighbors of A
+        a_src = self.edges[self.edges['source'] == node_a]['target'].tolist()
+        a_tgt = self.edges[self.edges['target'] == node_a]['source'].tolist()
+        a_neighbors = set(a_src + a_tgt)
+
+        # Get neighbors of B
+        b_src = self.edges[self.edges['source'] == node_b]['target'].tolist()
+        b_tgt = self.edges[self.edges['target'] == node_b]['source'].tolist()
+        b_neighbors = set(b_src + b_tgt)
+
+        shared_ids = a_neighbors.intersection(b_neighbors)
+        only_a = a_neighbors - shared_ids
+        only_b = b_neighbors - shared_ids
+
+        # Pick nodes to include
+        to_include = {node_a, node_b}
+        to_include.update(list(shared_ids)[:max_shared])
+        to_include.update(list(only_a)[:max_unique])
+        to_include.update(list(only_b)[:max_unique])
+
+        # Fetch node details
+        nodes = []
+        for nid in to_include:
+            n = self.get_node(nid)
+            if n:
+                nodes.append(n)
+
+        # Fetch all edges between these nodes
+        mask = self.edges['source'].isin(to_include) & self.edges['target'].isin(to_include)
+        rel_edges = self.edges[mask].to_dict('records')
+
+        return {'nodes': nodes, 'edges': rel_edges}
+
     def get_all_graph_metrics_paginated(self, skip: int = 0, limit: int = 100) -> list:
         subset = self.graph_metrics.iloc[skip:skip+limit]
         return [{"id": idx, **row} for idx, row in subset.iterrows()]

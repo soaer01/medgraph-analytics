@@ -17,6 +17,16 @@ def get_ego_graph(node_id: str, max_neighbors: int = 30):
         raise HTTPException(status_code=404, detail="Node not found")
     return result
 
+@router.get("/k-hop-graph/{node_id}")
+def get_k_hop_graph(node_id: str, depth: int = 1, limit: int = 20):
+    """Return a graph with neighbors up to depth K."""
+    return data_service_instance.get_k_hop_graph(node_id, depth, limit)
+
+@router.get("/relationship-graph/{node_a}/{node_b}")
+def get_relationship_graph(node_a: str, node_b: str, shared: int = 20, unique: int = 10):
+    """Return a combined graph showing shared and unique neighbors between two nodes."""
+    return data_service_instance.get_relationship_graph(node_a, node_b, shared, unique)
+
 @router.get("/nodes/{node_id}")
 def get_node_detail(node_id: str):
     node = data_service_instance.get_node(node_id)

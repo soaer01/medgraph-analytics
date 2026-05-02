@@ -62,8 +62,12 @@ def _spring_layout_3d(nodes: list, edges: list) -> dict:
     return pos
 
 
-def create_2d_network(nodes: list, edges: list, title: str = "Node Connections") -> go.Figure:
-    """Render an interactive 2D ego-graph with neon glowing nodes."""
+def create_2d_network(nodes: list, edges: list, title: str = "Node Connections", focus_ids: list = None) -> go.Figure:
+    """Render an interactive 2D ego-graph with neon glowing nodes.
+    
+    If focus_ids is provided, edges connected to these nodes will be colored 
+    with the respective node's color for visual distinction.
+    """
     if not nodes:
         fig = go.Figure()
         fig.update_layout(title="No data to display")
@@ -72,20 +76,57 @@ def create_2d_network(nodes: list, edges: list, title: str = "Node Connections")
     pos = _spring_layout_2d(nodes, edges)
     node_index = {n['id']: n for n in nodes}
 
-    # ── Edge traces ──
-    edge_x, edge_y = [], []
-    for e in edges:
-        src = pos.get(e.get('source', ''))
-        tgt = pos.get(e.get('target', ''))
-        if src and tgt:
-            edge_x += [src[0], tgt[0], None]
-            edge_y += [src[1], tgt[1], None]
+    # ── Edge traces (categorized by focus) ──
+    edge_traces = []
+    
+    # Define focus color mapping
+    focus_map = {}
+    if focus_ids:
+        for fid in focus_ids:
+            # Find node kind to get color
+            node = next((n for n in nodes if n['id'] == fid), None)
+            if node:
+                focus_map[fid] = _get_node_color(node.get('kind', 'default'))
 
-    edge_trace = go.Scatter(
-        x=edge_x, y=edge_y, mode='lines',
-        line=dict(width=1.2, color=EDGE_COLOR),
-        hoverinfo='none', showlegend=False
-    )
+    # Group edges
+    # Category: 'default', or node_id of a focus node
+    edge_groups = {'default': {'x': [], 'y': []}}
+    for fid in focus_map:
+        edge_groups[fid] = {'x': [], 'y': []}
+
+    for e in edges:
+        s_id = e.get('source', '')
+        t_id = e.get('target', '')
+        src = pos.get(s_id)
+        tgt = pos.get(t_id)
+        
+        if src and tgt:
+            # Assign to group
+            if s_id in focus_map:
+                group = s_id
+            elif t_id in focus_map:
+                group = t_id
+            else:
+                group = 'default'
+            
+            edge_groups[group]['x'] += [src[0], tgt[0], None]
+            edge_groups[group]['y'] += [src[1], tgt[1], None]
+
+    # Create traces
+    for group, data in edge_groups.items():
+        if not data['x']:
+            continue
+            
+        color = focus_map.get(group, EDGE_COLOR)
+        opacity = 0.6 if group != 'default' else 0.18
+        width = 1.6 if group != 'default' else 1.0
+        
+        edge_traces.append(go.Scatter(
+            x=data['x'], y=data['y'], mode='lines',
+            line=dict(width=width, color=color),
+            opacity=opacity,
+            hoverinfo='none', showlegend=False
+        ))
 
     # ── Node traces per kind for legend ──
     kind_groups: dict[str, list] = {}
@@ -135,7 +176,7 @@ def create_2d_network(nodes: list, edges: list, title: str = "Node Connections")
             name=kind, legendgroup=kind
         ))
 
-    fig = go.Figure(data=[edge_trace] + glow_traces + node_traces)
+    fig = go.Figure(data=edge_traces + glow_traces + node_traces)
     fig.update_layout(
         title=dict(text=title, font=dict(size=16, color='#e8ecf4', family='Inter')),
         paper_bgcolor='rgba(0,0,0,0)',
@@ -230,7 +271,7 @@ def create_3d_network(nodes: list, edges: list, title: str = "3D Node Graph") ->
     fig.frames = frames
 
     fig.update_layout(
-        title=dict(text=title, font=dict(size=16, color='#e8ecf4', family='Inter')),
+        title=None,
         paper_bgcolor='rgba(0,0,0,0)',
         scene=dict(
             bgcolor='rgba(10,12,20,1)',
@@ -248,8 +289,9 @@ def create_3d_network(nodes: list, edges: list, title: str = "3D Node Graph") ->
             bordercolor='rgba(0,240,255,0.15)',
             borderwidth=1
         ),
-        margin=dict(l=0, r=0, t=50, b=0),
-        height=520,
+        margin=dict(l=0, r=0, t=0, b=0),
+        height=500,
+        autosize=True,
         # Auto-play rotation animation
         updatemenus=[dict(
             type="buttons", showactive=False, visible=False,
@@ -266,4 +308,5 @@ def create_3d_network(nodes: list, edges: list, title: str = "3D Node Graph") ->
             )]
         )]
     )
+    fig.update_scenes(aspectmode='cube')
     return fig

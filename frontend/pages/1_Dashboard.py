@@ -9,16 +9,19 @@ import pandas as pd
 import os
 from frontend.components.charts import create_donut_chart, create_model_comparison_chart
 
-def load_css():
+@st.cache_data(show_spinner=False)
+def get_css():
     css_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "styles", "custom.css")
     if os.path.exists(css_path):
         with open(css_path) as f:
-            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+            return f.read()
+    return ""
 
-load_css()
+st.markdown(f"<style>{get_css()}</style>", unsafe_allow_html=True)
 from frontend.components.sidebar import render_sidebar
 from frontend.components.page_header import render_page_header
 from frontend.components.particles import render_particles
+from frontend.utils.api_cache import fetch_graph_stats, fetch_model_metrics
 
 render_sidebar()
 render_particles()
@@ -34,14 +37,6 @@ render_page_header(
 st.markdown("---")
 
 # ── Graph Stats ──
-@st.cache_data(ttl=300)
-def fetch_graph_stats():
-    try:
-        r = requests.get(f"{API_URL}/explorer/stats", timeout=10)
-        if r.status_code == 200:
-            return r.json()
-    except Exception:
-        return None
 
 stats = fetch_graph_stats()
 
@@ -69,14 +64,6 @@ else:
 st.markdown("---")
 
 # ── Model Performance ──
-@st.cache_data(ttl=300)
-def fetch_model_metrics():
-    try:
-        r = requests.get(f"{API_URL}/predictions/model-metrics", timeout=10)
-        if r.status_code == 200:
-            return r.json()
-    except Exception:
-        return None
 
 model_data = fetch_model_metrics()
 

@@ -21,21 +21,38 @@ st.set_page_config(
 )
 
 # ── Load CSS ──
-def load_css():
+@st.cache_data(show_spinner=False)
+def get_css():
     css_path = os.path.join(os.path.dirname(__file__), "styles", "custom.css")
     if os.path.exists(css_path):
         with open(css_path) as f:
-            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+            return f.read()
+    return ""
 
-load_css()
+st.markdown(f"<style>{get_css()}</style>", unsafe_allow_html=True)
 API_URL = st.secrets.get("API_URL", "http://localhost:8000/api")
 
 from frontend.components.sidebar import render_sidebar
 from frontend.components.page_header import render_page_header
 from frontend.components.particles import render_particles
+from frontend.utils.api_cache import preload_all_data
+from streamlit.runtime.scriptrunner import add_script_run_ctx
+import threading
 
 render_sidebar()
 render_particles()
+
+# Preload data in background without blocking
+if 'preloaded' not in st.session_state:
+    st.session_state.preloaded = True
+    def run_preload():
+        try:
+            preload_all_data()
+        except Exception:
+            pass
+    t = threading.Thread(target=run_preload, daemon=True)
+    add_script_run_ctx(t)
+    t.start()
 
 # ── Hero Section ──
 render_page_header(
@@ -77,14 +94,26 @@ st.markdown("---")
 st.markdown("### Platform Capabilities")
 f1, f2, f3 = st.columns(3)
 with f1:
-    st.markdown("##### Graph Analytics")
-    st.markdown("Explore PageRank, Betweenness Centrality, Eigenvector Centrality, and Louvain communities across the full knowledge graph.")
+    st.markdown("""
+    <div class="neon-card">
+        <h5>Graph Analytics</h5>
+        <p>Explore PageRank, Betweenness Centrality, Eigenvector Centrality, and Louvain communities across the full knowledge graph.</p>
+    </div>
+    """, unsafe_allow_html=True)
 with f2:
-    st.markdown("##### ML Discovery")
-    st.markdown("Predict novel drug-disease links with an adjustable confidence threshold. View Top 100 candidates or the complete list.")
+    st.markdown("""
+    <div class="neon-card">
+        <h5>ML Discovery</h5>
+        <p>Predict novel drug-disease links with an adjustable confidence threshold. View Top 100 candidates or the complete list.</p>
+    </div>
+    """, unsafe_allow_html=True)
 with f3:
-    st.markdown("##### Node Explorer")
-    st.markdown("Select any compound or disease from 22,000+ nodes and inspect its profile, graph metrics, and all known connections.")
+    st.markdown("""
+    <div class="neon-card">
+        <h5>Node Explorer</h5>
+        <p>Select any compound or disease from 22,000+ nodes and inspect its profile, graph metrics, and all known connections.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 st.markdown("---")
 st.caption("Powered by FastAPI · Streamlit · Plotly · Scikit-Learn")

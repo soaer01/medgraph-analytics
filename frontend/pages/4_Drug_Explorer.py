@@ -9,16 +9,19 @@ import os
 from frontend.components.tables import show_generic_table
 from frontend.components.network_graph import create_2d_network, create_3d_network
 
-def load_css():
+@st.cache_data(show_spinner=False)
+def get_css():
     css_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "styles", "custom.css")
     if os.path.exists(css_path):
         with open(css_path) as f:
-            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+            return f.read()
+    return ""
 
-load_css()
+st.markdown(f"<style>{get_css()}</style>", unsafe_allow_html=True)
 from frontend.components.sidebar import render_sidebar
 from frontend.components.page_header import render_page_header
 from frontend.components.particles import render_particles
+from frontend.utils.api_cache import fetch_node_list, fetch_node_detail, fetch_k_hop_graph
 
 render_sidebar()
 render_particles()
@@ -33,16 +36,6 @@ render_page_header(
 
 st.markdown("---")
 
-@st.cache_data(ttl=300, show_spinner="Loading node registry...")
-def fetch_node_list():
-    try:
-        r = requests.get(f"{API_URL}/explorer/nodes?limit=25000", timeout=30)
-        if r.status_code == 200:
-            return {f"{n['name']}  —  {n['id']}": n['id'] for n in r.json()}
-    except Exception:
-        pass
-    return {}
-
 nodes = fetch_node_list()
 
 if not nodes:
@@ -50,7 +43,7 @@ if not nodes:
     st.stop()
 
 selected_label = st.selectbox(
-    "Select Node", [""] + list(nodes.keys()),
+    "Select Node", list(nodes.keys()),
     help="Type to search by name or ID"
 )
 
@@ -60,25 +53,9 @@ if not selected_label:
 node_id = nodes[selected_label]
 
 # Fetch node details and ego-graph in parallel (cached)
-@st.cache_data(ttl=120)
-def fetch_node_detail(nid):
-    try:
-        r = requests.get(f"{API_URL}/explorer/nodes/{nid}", timeout=10)
-        return r.json() if r.status_code == 200 else None
-    except Exception:
-        return None
-
-@st.cache_data(ttl=120)
-def fetch_ego_graph(nid, max_n=30):
-    try:
-        r = requests.get(f"{API_URL}/explorer/ego-graph/{nid}?max_neighbors={max_n}", timeout=15)
-        return r.json() if r.status_code == 200 else None
-    except Exception:
-        return None
-
 with st.spinner("Fetching node data..."):
     details = fetch_node_detail(node_id)
-    ego    = fetch_ego_graph(node_id)
+    ego    = fetch_k_hop_graph(node_id, depth=1)
 
 if not details:
     st.error("Failed to load node details from the backend.")
@@ -125,7 +102,8 @@ if ego and ego.get('nodes'):
     with tab2d:
         fig2d = create_2d_network(
             ego['nodes'], ego['edges'],
-            title=f"2D Ego-Graph — {node['name']}"
+            title=f"2D Ego-Graph — {node['name']}",
+            focus_ids=[node_id]
         )
         st.plotly_chart(fig2d, use_container_width=True)
         st.caption("🔵 Compound &nbsp;|&nbsp; 🔴 Disease &nbsp;|&nbsp; 🟢 Gene &nbsp;|&nbsp; 🟡 Anatomy &nbsp;|&nbsp; 🟣 Pathway")
