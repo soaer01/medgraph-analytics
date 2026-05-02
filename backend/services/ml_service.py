@@ -72,20 +72,20 @@ class MLService:
         graph_metrics = data_service_instance.graph_metrics.reset_index().copy()
         nodes_df = data_service_instance.nodes.copy()
         
-        # Merge fresh degrees from node registry (overwriting stale ones in baseline if they exist)
+        # Merge fresh degrees and names from node registry (overwriting stale ones in baseline if they exist)
         # First drop existing degree columns to avoid suffix collisions
         for col in ['compound_out_degree', 'compound_in_degree', 'disease_out_degree', 'disease_in_degree']:
             if col in df.columns:
                 df.drop(columns=[col], inplace=True)
 
         # Merge compound fresh info
-        df = df.merge(nodes_df[['out_degree', 'in_degree']], left_on='source', right_index=True, how='left').rename(columns={
-            'out_degree': 'compound_out_degree', 'in_degree': 'compound_in_degree'
+        df = df.merge(nodes_df[['out_degree', 'in_degree', 'name']], left_on='source', right_index=True, how='left').rename(columns={
+            'out_degree': 'compound_out_degree', 'in_degree': 'compound_in_degree', 'name': 'source_name'
         })
         
         # Merge disease fresh info
-        df = df.merge(nodes_df[['out_degree', 'in_degree']], left_on='target', right_index=True, how='left').rename(columns={
-            'out_degree': 'disease_out_degree', 'in_degree': 'disease_in_degree'
+        df = df.merge(nodes_df[['out_degree', 'in_degree', 'name']], left_on='target', right_index=True, how='left').rename(columns={
+            'out_degree': 'disease_out_degree', 'in_degree': 'disease_in_degree', 'name': 'target_name'
         })
         
         # Merge compound metrics
@@ -136,7 +136,9 @@ class MLService:
         for _, row in filtered.iterrows():
             results.append({
                 "source": row['source'],
+                "source_name": row.get('source_name', row['source']),
                 "target": row['target'],
+                "target_name": row.get('target_name', row['target']),
                 "predicted_probability": float(row['predicted_probability']),
                 "compound_pagerank": float(row.get('compound_pagerank', 0)),
                 "disease_pagerank": float(row.get('disease_pagerank', 0)),

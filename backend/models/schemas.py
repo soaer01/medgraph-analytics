@@ -40,7 +40,9 @@ class ModelMetrics(BaseModel):
 
 class DiscoveryCandidate(BaseModel):
     source: str
+    source_name: str
     target: str
+    target_name: str
     predicted_probability: float
     # Include some graph features for context
     compound_pagerank: float
