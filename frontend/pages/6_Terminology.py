@@ -5,6 +5,18 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 
 import streamlit as st
 import os
+from PIL import Image
+
+# ── Page Config ──
+_favicon_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "assets", "favicon.png")
+_favicon = Image.open(_favicon_path) if os.path.exists(_favicon_path) else "🧬"
+
+st.set_page_config(
+    page_title="Terminology — MedGraph",
+    page_icon=_favicon,
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
 @st.cache_data(show_spinner=False)
 def get_css():

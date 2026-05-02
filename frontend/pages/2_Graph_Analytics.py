@@ -7,6 +7,18 @@ import streamlit as st
 import requests
 import pandas as pd
 import os
+from PIL import Image
+
+# ── Page Config ──
+_favicon_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "assets", "favicon.png")
+_favicon = Image.open(_favicon_path) if os.path.exists(_favicon_path) else "🧬"
+
+st.set_page_config(
+    page_title="Graph Analytics — MedGraph",
+    page_icon=_favicon,
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 from frontend.components.charts import create_distribution_chart
 from frontend.components.tables import show_generic_table
 
