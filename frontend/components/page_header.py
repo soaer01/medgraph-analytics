@@ -123,7 +123,7 @@ def render_page_header(title: str, page_key: str, subtitle: str = ""):
     <div class="neon-page-header">
         <div class="neon-icon">{icon_svg}</div>
         <div>
-            <h1 class="neon-title">{title}</h1>
+            <h1 class="neon-title"><span style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); opacity: 0.8; margin-right: 12px;">⚗</span>{title}</h1>
             {subtitle_html}
         </div>
     </div>
