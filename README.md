@@ -95,4 +95,4 @@ MedGraph-Analytics is architected to be deployed as two decoupled microservices:
 ---
 
 ## 🎓 Academic Context
-This project was developed as a comprehensive analytical tool for a BS Data Science curriculum (Semester 6 - Artificial Intelligence). It demonstrates the practical application of Graph Data Science (GDS) and applied Machine Learning in the domain of computational pharmacology.
+This project was developed as a comprehensive analytical tool. It demonstrates the practical application of Graph Data Science (GDS) and applied Machine Learning in the domain of computational pharmacology.
